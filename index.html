@@ -46,6 +46,7 @@
             background: #0f172a;
             border: 1px solid #334155;
             transition: all 0.2s;
+            color: white;
         }
 
         .input-field:focus {
@@ -54,8 +55,20 @@
             outline: none;
         }
 
-        .meta-success { color: #10b981; background: rgba(16, 185, 129, 0.1); }
-        .meta-fail { color: #f43f5e; background: rgba(244, 63, 94, 0.1); }
+        .select-year {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #save-indicator {
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -67,12 +80,37 @@
                 <h1 class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
                     IGP FIBRA Gerencial
                 </h1>
-                <p class="text-slate-400 text-sm mt-1">Projeções e Acompanhamento de Metas • 2026</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <p class="text-slate-400 text-sm">Projeções e Acompanhamento do Ano</p>
+                    <select id="year-selector" class="select-year text-sm ml-2">
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                    </select>
+                </div>
             </div>
-            <div class="flex gap-3 bg-[#1e293b] p-1.5 rounded-2xl border border-slate-700 shadow-lg">
-                <div class="px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-                    <i data-lucide="target" class="w-4 h-4"></i>
-                    Crescimento Alvo: 1,5% ao mês
+            <div class="flex items-center gap-4">
+                <div id="save-indicator" class="opacity-0 text-[10px] uppercase font-bold text-emerald-500 flex items-center gap-2">
+                    <span>Salvo</span>
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                </div>
+                <div class="flex gap-3 bg-[#1e293b] p-1.5 rounded-2xl border border-slate-700 shadow-lg">
+                    <div class="px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+                        <i data-lucide="target" class="w-4 h-4"></i>
+                        Crescimento Alvo: 1,5% ao mês
+                    </div>
                 </div>
             </div>
         </header>
@@ -144,14 +182,18 @@
                     <h3 class="text-slate-400 text-xs font-bold mb-6 flex items-center gap-2 uppercase tracking-widest">
                         <i data-lucide="users" class="text-emerald-400 w-4 h-4"></i> Evolução da Base
                     </h3>
-                    <canvas id="chartEvolucao" height="200"></canvas>
+                    <div class="h-[200px]">
+                        <canvas id="chartEvolucao"></canvas>
+                    </div>
                 </div>
 
                 <div class="glass-card p-6 rounded-2xl">
                     <h3 class="text-slate-400 text-xs font-bold mb-6 flex items-center gap-2 uppercase tracking-widest">
                         <i data-lucide="target" class="text-cyan-400 w-4 h-4"></i> Performance vs Meta
                     </h3>
-                    <canvas id="chartMeta" height="200"></canvas>
+                    <div class="h-[200px]">
+                        <canvas id="chartMeta"></canvas>
+                    </div>
                 </div>
 
                 <div class="bg-gradient-to-br from-blue-600/10 to-indigo-600/10 border border-blue-500/20 p-5 rounded-2xl">
@@ -174,14 +216,37 @@
         /* JAVASCRIPT LÓGICA */
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         let dados = meses.map(mes => ({ mes, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
-
+        let currentYear = "2026";
         let chartEvolucao, chartMeta;
 
         function init() {
             lucide.createIcons();
-            renderTable();
             initCharts();
+            
+            document.getElementById('year-selector').addEventListener('change', (e) => {
+                currentYear = e.target.value;
+                loadData();
+            });
+
+            loadData();
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem(`igp_data_${currentYear}`);
+            if (saved) {
+                dados = JSON.parse(saved);
+            } else {
+                dados = meses.map(mes => ({ mes, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
+            }
+            renderTable();
             updateAll();
+        }
+
+        function saveData() {
+            localStorage.setItem(`igp_data_${currentYear}`, JSON.stringify(dados));
+            const indicator = document.getElementById('save-indicator');
+            indicator.style.opacity = "1";
+            setTimeout(() => indicator.style.opacity = "0", 1500);
         }
 
         function renderTable() {
@@ -189,10 +254,10 @@
             tbody.innerHTML = dados.map((item, idx) => `
                 <tr class="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
                     <td class="p-4 font-semibold text-slate-300">${item.mes}</td>
-                    <td class="p-2"><input type="number" oninput="updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right" placeholder="0.00"></td>
-                    <td class="p-2"><input type="number" oninput="updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right" placeholder="0"></td>
-                    <td class="p-2"><input type="number" oninput="updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right" placeholder="0"></td>
-                    <td class="p-2"><input type="number" oninput="updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right" placeholder="0"></td>
+                    <td class="p-2"><input type="number" value="${item.recebido || ''}" oninput="updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right" placeholder="0.00"></td>
+                    <td class="p-2"><input type="number" value="${item.ativos || ''}" oninput="updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right font-bold" placeholder="0"></td>
+                    <td class="p-2"><input type="number" value="${item.novos || ''}" oninput="updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-blue-400" placeholder="0"></td>
+                    <td class="p-2"><input type="number" value="${item.cancelados || ''}" oninput="updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-rose-400" placeholder="0"></td>
                     <td class="p-4 text-center" id="status-${idx}">
                         ${idx === 0 ? '<span class="text-slate-500 text-[10px] font-bold uppercase">Mês Base</span>' : '-'}
                     </td>
@@ -200,9 +265,10 @@
             `).join('');
         }
 
-        function updateData(index, field, value) {
+        window.updateData = function(index, field, value) {
             dados[index][field] = parseFloat(value) || 0;
             updateAll();
+            saveData();
         }
 
         function updateAll() {
@@ -229,12 +295,14 @@
                     const colorClass = atingiu ? 'text-emerald-400' : 'text-rose-400';
                     const icon = atingiu ? 'check-circle-2' : 'alert-circle';
                     
-                    statusCell.innerHTML = `
-                        <div class="flex flex-col items-center">
-                            <span class="${colorClass} font-black text-xs">${perc.toFixed(2)}%</span>
-                            <i data-lucide="${icon}" class="${atingiu ? 'text-emerald-500' : 'text-rose-500'} w-3.5 h-3.5 mt-1"></i>
-                        </div>
-                    `;
+                    if (statusCell) {
+                        statusCell.innerHTML = `
+                            <div class="flex flex-col items-center">
+                                <span class="${colorClass} font-black text-xs">${perc.toFixed(2)}%</span>
+                                <i data-lucide="${icon}" class="${atingiu ? 'text-emerald-500' : 'text-rose-500'} w-3.5 h-3.5 mt-1"></i>
+                            </div>
+                        `;
+                    }
                 }
             });
 
@@ -250,6 +318,16 @@
         }
 
         function initCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { grid: { color: '#334155' }, ticks: { color: '#64748b', font: { size: 10 } } },
+                    x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
+                }
+            };
+
             const ctxEvolucao = document.getElementById('chartEvolucao').getContext('2d');
             chartEvolucao = new Chart(ctxEvolucao, {
                 type: 'line',
@@ -265,14 +343,7 @@
                         borderWidth: 3
                     }]
                 },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        y: { grid: { color: '#334155' }, ticks: { color: '#64748b', font: { size: 10 } } },
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
-                    }
-                }
+                options: chartOptions
             });
 
             const ctxMeta = document.getElementById('chartMeta').getContext('2d');
@@ -287,32 +358,24 @@
                         borderRadius: 4
                     }]
                 },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        y: { grid: { color: '#334155' }, ticks: { color: '#64748b', font: { size: 10 } } },
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
-                    }
-                }
+                options: chartOptions
             });
         }
 
         function updateCharts() {
-            // Update Evolução
+            if (!chartEvolucao || !chartMeta) return;
+
             chartEvolucao.data.datasets[0].data = dados.map(d => d.ativos);
             chartEvolucao.update();
 
-            // Update Meta
-            const crescimentos = [];
-            const backgroundColors = [];
+            const c = [], b = [];
             for(let i=1; i<dados.length; i++) {
                 const perc = dados[i-1].ativos > 0 ? ((dados[i].ativos - dados[i-1].ativos) / dados[i-1].ativos) * 100 : 0;
-                crescimentos.push(perc.toFixed(2));
-                backgroundColors.push(perc >= 1.5 ? '#10b981' : '#f43f5e');
+                c.push(perc.toFixed(2));
+                b.push(perc >= 1.5 ? '#10b981' : '#f43f5e');
             }
-            chartMeta.data.datasets[0].data = crescimentos;
-            chartMeta.data.datasets[0].backgroundColor = backgroundColors;
+            chartMeta.data.datasets[0].data = c;
+            chartMeta.data.datasets[0].backgroundColor = b;
             chartMeta.update();
         }
 
