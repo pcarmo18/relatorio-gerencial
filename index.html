@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IGP FIBRA | Dashboard Gerencial</title>
+    <title>IGP FIBRA | Executive Dashboard</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,18 +13,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         body { 
-            background-color: #eef4f9; /* Branco gelo com leve toque azulado */
+            background-color: #eef4f9; 
             background-image: 
                 radial-gradient(circle at 15% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
                 radial-gradient(circle at 85% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
-            color: #1e293b; /* Texto escuro principal */
+            color: #1e293b; 
             font-family: 'Inter', sans-serif; 
-            display: none; /* Escondido até a autenticação validar */
+            display: none; 
             -webkit-tap-highlight-color: transparent; 
             min-height: 100vh;
         }
 
-        /* Premium Light Glassmorphism */
         .glass-card { 
             background: rgba(255, 255, 255, 0.90); 
             backdrop-filter: blur(20px);
@@ -38,7 +37,6 @@
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
         }
 
-        /* Inputs Editáveis na Tabela */
         .input-field { 
             background: #f8fafc; 
             border: 1px solid transparent; 
@@ -56,7 +54,6 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); 
         }
 
-        /* Inputs de Metas */
         .meta-input {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -69,13 +66,11 @@
             outline: none;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Responsividade da Tabela Mobile */
         @media (max-width: 768px) {
             .resp-table thead { display: none; }
             .resp-table tr { 
@@ -92,13 +87,13 @@
 </head>
 <body class="p-4 lg:p-8 relative">
 
-    <div class="max-w-7xl mx-auto space-y-6 lg:space-y-8">
+    <div class="max-w-[1400px] mx-auto space-y-6 lg:space-y-8">
         
         <header class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4">
             <div class="flex flex-col items-center md:items-start">
                 <img src="logo igp.png" alt="IGP FIBRA Logo" class="h-16 lg:h-20 object-contain mb-2 drop-shadow-sm">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                    Dashboard Gerencial <span class="text-slate-300 mx-2">|</span> Dev. Patrick Carmo
+                    Dashboard Gerencial <span class="text-slate-300 mx-2">|</span> Metas & Performance
                 </p>
             </div>
             
@@ -109,7 +104,7 @@
                 </div>
                 
                 <button onclick="window.toggleHelp(true)" class="group flex items-center gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-sky-200 text-sm font-bold transition-all shadow-sm">
-                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Como Funciona
+                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Entender a Lógica
                 </button>
 
                 <button onclick="window.fazerLogout()" class="group flex items-center gap-2 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-rose-200 text-sm font-bold transition-all shadow-sm">
@@ -122,25 +117,21 @@
             <div class="w-full lg:w-1/2 space-y-5">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
-                        <i data-lucide="target" class="w-4 h-4 text-blue-600"></i> Parâmetros de Crescimento
+                        <i data-lucide="settings" class="w-4 h-4 text-blue-600"></i> Parâmetros Iniciais
                     </h3>
-                    <div class="flex gap-3 text-[10px] font-bold uppercase tracking-wider">
-                        <span class="flex items-center gap-1 text-blue-600"><div class="w-2 h-2 rounded-full bg-blue-600"></div> Mínimo</span>
-                        <span class="flex items-center gap-1 text-emerald-500"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Máximo</span>
-                    </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider cursor-help" title="Define o crescimento mínimo aceitável">Meta Mínima (%)</label>
+                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Faturamento Base (R$)</label>
                         <div class="relative mt-1.5">
-                            <input type="text" id="input-meta-min" class="meta-input rounded-xl w-full py-2.5 pl-4 pr-8 text-blue-900 font-black text-lg" placeholder="1.5" onchange="window.updateMetas()">
-                            <span class="absolute right-4 top-3 text-slate-400 font-bold">%</span>
+                            <span class="absolute left-4 top-3 text-slate-400 font-bold">R$</span>
+                            <input type="text" id="input-meta-inicial" class="meta-input rounded-xl w-full py-2.5 pl-10 pr-4 text-blue-900 font-black text-lg" placeholder="737.000,00" onchange="window.updateMetas(this, true)">
                         </div>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider cursor-help" title="Define a meta de excelência">Meta Máxima (%)</label>
+                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Taxa de Crescimento (%)</label>
                         <div class="relative mt-1.5">
-                            <input type="text" id="input-meta-max" class="meta-input rounded-xl w-full py-2.5 pl-4 pr-8 text-emerald-700 font-black text-lg" placeholder="2.0" onchange="window.updateMetas()">
+                            <input type="text" id="input-meta-perc" class="meta-input rounded-xl w-full py-2.5 pl-4 pr-8 text-emerald-700 font-black text-lg" placeholder="1.5" onchange="window.updateMetas(this, false)">
                             <span class="absolute right-4 top-3 text-slate-400 font-bold">%</span>
                         </div>
                     </div>
@@ -148,79 +139,102 @@
             </div>
             
             <div class="w-full lg:w-1/2 flex flex-col items-end border-t border-slate-200 lg:border-t-0 lg:border-l pt-6 lg:pt-0 lg:pl-8">
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Média de Crescimento Global</p>
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1" id="kpi-status-title">Balanço Global do Ano</p>
                 <div class="flex items-end gap-3">
-                    <span id="kpi-crescimento" class="text-5xl font-black tracking-tighter transition-colors duration-300">0.00%</span>
-                    <div id="status-icon-global" class="mb-2 transition-transform duration-300"></div>
+                    <span id="kpi-saldo-global" class="text-4xl lg:text-5xl font-black tracking-tighter transition-colors duration-300">R$ 0,00</span>
                 </div>
-                <p id="status-text-global" class="text-sm font-bold mt-2 text-slate-500">Aguardando dados...</p>
+                <p id="kpi-saldo-sub" class="text-sm font-bold mt-2 text-slate-500">Calculando...</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-            <div class="glass-card p-6 lg:p-7 rounded-2xl relative overflow-hidden group">
-                <div class="absolute -right-6 -top-6 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="wallet" class="w-40 h-40 text-blue-900"></i></div>
-                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
-                    Faturamento Acumulado <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-emerald-500"></i>
-                </span>
-                <span id="kpi-faturamento" class="text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">R$ 0</span>
+        <div class="grid grid-cols-2 xl:grid-cols-6 gap-4 lg:gap-6">
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1">
+                <div class="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform"><i data-lucide="wallet" class="w-24 h-24"></i></div>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Faturado Acum. <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-blue-500"></i></span>
+                <span id="kpi-faturamento" class="text-2xl font-black text-slate-800 tracking-tight">R$ 0</span>
             </div>
-            <div class="glass-card p-6 lg:p-7 rounded-2xl relative overflow-hidden group">
-                <div class="absolute -right-6 -top-6 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="user-plus" class="w-40 h-40 text-blue-900"></i></div>
-                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
-                    Novas Ativações Totais <i data-lucide="activity" class="w-3.5 h-3.5 text-blue-500"></i>
-                </span>
-                <span id="kpi-ativacoes" class="text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">0</span>
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1">
+                <div class="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform"><i data-lucide="target" class="w-24 h-24"></i></div>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Meta Acum. <i data-lucide="crosshair" class="w-3.5 h-3.5 text-slate-400"></i></span>
+                <span id="kpi-meta-acumulada" class="text-2xl font-black text-slate-800 tracking-tight">R$ 0</span>
             </div>
-            <div class="glass-card p-6 lg:p-7 rounded-2xl relative overflow-hidden group">
-                <div class="absolute -right-6 -top-6 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="user-minus" class="w-40 h-40 text-blue-900"></i></div>
-                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
-                    Cancelamentos (Churn) <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-500"></i>
-                </span>
-                <span id="kpi-churn" class="text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">0</span>
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 border border-blue-200 bg-blue-50/50">
+                <div class="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="activity" class="w-24 h-24 text-blue-600"></i></div>
+                <span class="text-blue-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Base Ativa Atual <i data-lucide="users" class="w-3.5 h-3.5"></i></span>
+                <span id="kpi-base-ativa" class="text-2xl font-black text-blue-900 tracking-tight">0</span>
+            </div>
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 border border-emerald-200 bg-emerald-50/50">
+                <div class="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="user-plus" class="w-24 h-24 text-emerald-600"></i></div>
+                <span class="text-emerald-700 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Novos Acum. <i data-lucide="trending-up" class="w-3.5 h-3.5"></i></span>
+                <span id="kpi-novos-acum" class="text-2xl font-black text-emerald-900 tracking-tight">0</span>
+            </div>
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 border border-rose-200 bg-rose-50/50">
+                <div class="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="user-minus" class="w-24 h-24 text-rose-600"></i></div>
+                <span class="text-rose-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Cancelados Acum. <i data-lucide="trending-down" class="w-3.5 h-3.5"></i></span>
+                <span id="kpi-canc-acum" class="text-2xl font-black text-rose-900 tracking-tight">0</span>
+            </div>
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 bg-slate-800 border-slate-700 text-white">
+                <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="pie-chart" class="w-24 h-24"></i></div>
+                <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Retenção (Churn) <i data-lucide="percent" class="w-3.5 h-3.5 text-blue-400"></i></span>
+                <span id="kpi-churn" class="text-2xl font-black text-white tracking-tight">0%</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 pb-10">
-            <div class="xl:col-span-2 glass-card rounded-2xl overflow-hidden flex flex-col shadow-sm">
-                <div class="p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center">
-                    <h2 class="font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wider">
-                        <i data-lucide="calendar-days" class="w-4 h-4 text-blue-600"></i> Histórico Mensal Editável
-                    </h2>
-                </div>
-                <div class="p-2 lg:p-4 flex-1 overflow-x-auto">
-                    <table class="w-full resp-table whitespace-nowrap">
-                        <thead>
-                            <tr class="text-slate-500 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
-                                <th class="p-4 text-left">Mês</th>
-                                <th class="p-4 text-right">Faturamento (R$)</th>
-                                <th class="p-4 text-right">Base Ativa</th>
-                                <th class="p-4 text-right">Novos</th>
-                                <th class="p-4 text-right">Cancelados</th>
-                                <th class="p-4 text-center">Evolução do Financeiro (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            </tbody>
-                    </table>
-                </div>
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col shadow-sm pb-4">
+            <div class="p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center">
+                <h2 class="font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                    <i data-lucide="table" class="w-4 h-4 text-blue-600"></i> Histórico Mensal & Metas Inteligentes
+                </h2>
             </div>
+            <div class="p-2 lg:p-4 overflow-x-auto">
+                <table class="w-full resp-table whitespace-nowrap">
+                    <thead>
+                        <tr class="text-slate-500 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
+                            <th class="p-3 text-left">Mês</th>
+                            <th class="p-3 text-right">Valor Recebido (R$)</th>
+                            <th class="p-3 text-right">Meta Ajustada (Automática)</th>
+                            <th class="p-3 text-right">Desempenho (Mês Isolado)</th>
+                            <th class="p-3 text-right">Base Ativa</th>
+                            <th class="p-3 text-right">Novos</th>
+                            <th class="p-3 text-right">Canc.</th>
+                            <th class="p-3 text-right">% Realizada</th>
+                            <th class="p-3 text-right">Cresc. Efetivo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
 
-            <div class="flex flex-col gap-6">
-                <div class="glass-card p-6 rounded-2xl flex-1 min-h-[300px] flex flex-col shadow-sm">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
-                        Evolução da Receita Bruta
-                        <i data-lucide="line-chart" class="w-4 h-4 text-emerald-500"></i>
-                    </h3>
-                    <div class="relative flex-1"><canvas id="chartEvolucao"></canvas></div>
-                </div>
-                <div class="glass-card p-6 rounded-2xl flex-1 min-h-[300px] flex flex-col shadow-sm">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
-                        Crescimento Mensal (% Meta)
-                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>
-                    </h3>
-                    <div class="relative flex-1"><canvas id="chartMeta"></canvas></div>
-                </div>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
+            <div class="glass-card p-6 rounded-2xl min-h-[350px] flex flex-col shadow-sm">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                    Faturamento Real vs Meta Ajustada
+                    <i data-lucide="trending-up" class="w-4 h-4 text-blue-500"></i>
+                </h3>
+                <div class="relative flex-1"><canvas id="chartLine"></canvas></div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl min-h-[350px] flex flex-col shadow-sm">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                    Crescimento Efetivo do Mês (%)
+                    <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-500"></i>
+                </h3>
+                <div class="relative flex-1"><canvas id="chartBar"></canvas></div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl min-h-[300px] flex flex-col shadow-sm">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                    Evolução da Base Ativa
+                    <i data-lucide="users" class="w-4 h-4 text-blue-500"></i>
+                </h3>
+                <div class="relative flex-1"><canvas id="chartBase"></canvas></div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl min-h-[300px] flex flex-col shadow-sm">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                    Contratos: Novos vs Cancelados
+                    <i data-lucide="git-compare" class="w-4 h-4 text-purple-500"></i>
+                </h3>
+                <div class="relative flex-1"><canvas id="chartClientes"></canvas></div>
             </div>
         </div>
     </div>
@@ -229,7 +243,7 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="help-content">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i data-lucide="help-circle" class="w-5 h-5 text-blue-600"></i> Guia da Dashboard
+                    <i data-lucide="help-circle" class="w-5 h-5 text-blue-600"></i> Como a Lógica Funciona
                 </h2>
                 <button onclick="window.toggleHelp(false)" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -240,39 +254,24 @@
                 
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                        <i data-lucide="bar-chart" class="w-4 h-4 text-blue-500"></i> O que é a Evolução (%)?
+                        <i data-lucide="refresh-cw" class="w-4 h-4 text-blue-500"></i> Meta Dinâmica (Com Recuperação)
                     </h3>
-                    <p class="leading-relaxed">A <strong>Evolução</strong> é o cálculo do crescimento financeiro da empresa. Ela compara o <span class="text-slate-800 font-semibold">Faturamento</span> do mês atual com o do mês anterior. O sistema calcula automaticamente se a receita subiu ou desceu percentualmente.</p>
+                    <p class="leading-relaxed">O sistema calcula uma <strong>Meta Padrão</strong> baseada no crescimento de 1,5% ao mês.<br>Se a empresa <strong>não</strong> bater a meta em Janeiro, esse valor que faltou vira uma Dívida. Em Fevereiro, o sistema criará uma <strong>Meta Ajustada</strong>: Ele pegará a Meta Padrão de Fev + A Dívida de Jan. Assim você sempre sabe o quanto precisa faturar para voltar à rota de crescimento ideal do ano.</p>
                 </div>
 
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                        <i data-lucide="target" class="w-4 h-4 text-blue-500"></i> Como as Metas (Mínima e Máxima) afetam as cores?
+                        <i data-lucide="bar-chart" class="w-4 h-4 text-emerald-500"></i> % Realizada & Desempenho do Mês
                     </h3>
-                    <p class="leading-relaxed">Você define nos campos superiores qual a sua meta base (Mínima) e a sua meta ideal (Máxima). O sistema usa isso para pintar a Tabela, o Gráfico de Barras e o KPI Global:</p>
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
-                        <div class="flex items-start gap-3">
-                            <div class="w-3 h-3 mt-1 rounded-full bg-emerald-500 shrink-0"></div> 
-                            <p><strong>Verde (Excepcional):</strong> O crescimento atingiu ou ultrapassou a <strong>Meta Máxima</strong>.</p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="w-3 h-3 mt-1 rounded-full bg-blue-500 shrink-0"></div> 
-                            <p><strong>Azul (Saudável):</strong> O crescimento ficou entre a Mínima e a Máxima (no alvo).</p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="w-3 h-3 mt-1 rounded-full bg-rose-500 shrink-0"></div> 
-                            <p><strong>Vermelho (Atenção):</strong> O crescimento fechou abaixo da <strong>Meta Mínima</strong> exigida.</p>
-                        </div>
-                    </div>
+                    <p class="leading-relaxed">A porcentagem realizada e o Déficit do Mês calculam <strong>apenas</strong> a performance contra a Meta Padrão daquele mês específico. Ou seja, mostra se o mês operou no lucro ou prejuízo, independentemente da dívida acumulada.</p>
                 </div>
 
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                        <i data-lucide="edit-3" class="w-4 h-4 text-blue-500"></i> Como preencher os dados?
+                        <i data-lucide="activity" class="w-4 h-4 text-purple-500"></i> Crescimento Efetivo (%)
                     </h3>
-                    <p class="leading-relaxed">Basta clicar nos campos em branco da <strong>Tabela de Histórico Mensal</strong> e digitar. O sistema aceita números diretamente, formata em Reais (R$) automaticamente e calcula a evolução assim que você termina de digitar. Configurei o salvamento na nuvem do Google (Firebase) acontecer instantaneamente.</p>
+                    <p class="leading-relaxed">Mostra o quanto você <em>realmente</em> cresceu. É calculado multiplicando a sua taxa alvo (ex: 1,5%) pela % que você atingiu no mês. Se atingiu só 95% da meta, o seu crescimento efetivo no mês foi de `1,42%`.</p>
                 </div>
-
             </div>
             
             <div class="p-5 border-t border-slate-100 bg-slate-50 text-right rounded-b-3xl">
@@ -283,21 +282,16 @@
         </div>
     </div>
 
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ==========================================
-        // 1. AUTENTICAÇÃO E SETUP INICIAL
-        // ==========================================
         if (localStorage.getItem('igp_auth') !== 'true') window.location.href = 'login.html';
         else document.body.style.display = "block";
         window.fazerLogout = () => { localStorage.removeItem('igp_auth'); window.location.href = 'login.html'; };
 
-        lucide.createIcons(); // Carrega ícones
+        lucide.createIcons();
 
-        // Configuração do Banco de Dados
         const firebaseConfig = {
             apiKey: "AIzaSyDjh5UHLv-XHjVuMUeYYk9dLsQp1THEGhI",
             authDomain: "dashboard-gerencial-igpfibra.firebaseapp.com",
@@ -309,16 +303,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
-        // ==========================================
-        // 2. VARIÁVEIS GLOBAIS
-        // ==========================================
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
-        let configuracoes = { metaMin: 1.5, metaMax: 2.0 };
+        
+        let configuracoes = { metaInicial: 737000, metaPerc: 1.5 };
         let saveTimeout;
-        let chartEvolucao, chartMeta;
+        let chartLine, chartBar, chartBase, chartClientes;
 
-        // Funções Úteis de Formatação
         const formatBRL = (value) => new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
         const formatNum = (value) => new Intl.NumberFormat('pt-BR').format(value);
         const parseCurrency = (str) => {
@@ -327,68 +318,61 @@
             return parseFloat(numeric) || 0;
         };
 
-        // ==========================================
-        // 3. UI: MODAL DE AJUDA
-        // ==========================================
         window.toggleHelp = (show) => {
             const modal = document.getElementById('help-modal');
             const content = document.getElementById('help-content');
-            
             if (show) {
                 modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    content.classList.remove('scale-95');
-                }, 10);
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
             } else {
-                modal.classList.add('opacity-0');
-                content.classList.add('scale-95');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
+                modal.classList.add('opacity-0'); content.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hidden'); }, 300);
             }
         };
 
-        // ==========================================
-        // 4. FIREBASE: LOAD E SAVE
-        // ==========================================
         async function loadData() {
             const docSnap = await getDoc(doc(db, "gestao_igp", "2026"));
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                if (data.meses) dados = data.meses;
+                if (data.meses) {
+                    dados = data.meses.map((m, i) => ({
+                        mes: m.mes,
+                        recebido: m.recebido || 0,
+                        ativos: m.ativos || 0,
+                        novos: m.novos || 0,
+                        cancelados: m.cancelados || 0
+                    }));
+                }
                 if (data.configuracoes) {
-                    configuracoes.metaMin = data.configuracoes.metaMin || data.configuracoes.metaPerc || 1.5;
-                    configuracoes.metaMax = data.configuracoes.metaMax || 2.0;
+                    configuracoes.metaInicial = data.configuracoes.metaInicial || 737000;
+                    configuracoes.metaPerc = data.configuracoes.metaPerc || 1.5;
                 }
             }
-            
-            // Popula os inputs de Metas com os dados carregados
-            document.getElementById('input-meta-min').value = configuracoes.metaMin;
-            document.getElementById('input-meta-max').value = configuracoes.metaMax;
-
-            renderTable();
+            document.getElementById('input-meta-inicial').value = formatBRL(configuracoes.metaInicial);
+            document.getElementById('input-meta-perc').value = configuracoes.metaPerc;
             updateAll();
         }
 
         async function saveData() {
             const indicator = document.getElementById('save-indicator');
-            indicator.style.opacity = "1"; // Mostra "Sincronizado"
+            indicator.style.opacity = "1";
             await setDoc(doc(db, "gestao_igp", "2026"), { meses: dados, configuracoes: configuracoes });
-            setTimeout(() => indicator.style.opacity = "0", 2000); // Esconde após 2s
+            setTimeout(() => indicator.style.opacity = "0", 2000);
         }
 
         function triggerSave() {
             clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(saveData, 1000); // Evita flood no banco salvando 1s após parar de digitar
+            saveTimeout = setTimeout(saveData, 1000);
         }
 
-        // ==========================================
-        // 5. LÓGICA DE NEGÓCIO E RENDERIZAÇÃO
-        // ==========================================
-        window.updateMetas = () => {
-            configuracoes.metaMin = parseFloat(document.getElementById('input-meta-min').value.replace(',', '.')) || 0;
-            configuracoes.metaMax = parseFloat(document.getElementById('input-meta-max').value.replace(',', '.')) || 0;
+        window.updateMetas = (element, isCurrency) => {
+            let val = element.value;
+            if(isCurrency) {
+                configuracoes.metaInicial = parseCurrency(val);
+                element.value = formatBRL(configuracoes.metaInicial);
+            } else {
+                configuracoes.metaPerc = parseFloat(val.replace(',', '.')) || 0;
+            }
             updateAll();
             triggerSave();
         }
@@ -396,209 +380,242 @@
         window.handleInput = (element, index, field, isCurrency) => {
             let val = element.value;
             let numericVal = isCurrency ? parseCurrency(val) : parseInt(val.replace(/\D/g, '')) || 0;
-            
-            dados[index][field] = numericVal; // Atualiza variável
-            element.value = isCurrency ? formatBRL(numericVal) : formatNum(numericVal); // Devolve formatado
-            
+            dados[index][field] = numericVal;
+            element.value = isCurrency ? formatBRL(numericVal) : formatNum(numericVal);
             updateAll();
             triggerSave();
         };
 
-        function renderTable() {
-            document.getElementById('table-body').innerHTML = dados.map((item, idx) => `
-                <tr class="hover:bg-slate-50/50 transition-colors group border-b border-slate-100 last:border-0">
-                    <td class="p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors">${item.mes}</td>
-                    <td data-label="Faturamento" class="p-2"><input type="text" value="${formatBRL(item.recebido)}" onchange="window.handleInput(this, ${idx}, 'recebido', true)" class="input-field text-right font-black text-slate-800 tracking-wide"></td>
-                    <td data-label="Base Ativa" class="p-2"><input type="text" value="${formatNum(item.ativos)}" onchange="window.handleInput(this, ${idx}, 'ativos', false)" class="input-field text-right text-slate-600 font-semibold"></td>
-                    <td data-label="Novos" class="p-2"><input type="text" value="${formatNum(item.novos)}" onchange="window.handleInput(this, ${idx}, 'novos', false)" class="input-field text-right text-blue-600 font-bold"></td>
-                    <td data-label="Cancels" class="p-2"><input type="text" value="${formatNum(item.cancelados)}" onchange="window.handleInput(this, ${idx}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold"></td>
-                    <td data-label="Evolução" class="p-4 text-center" id="status-${idx}">
-                        <span class="text-slate-400 text-sm font-semibold">-</span>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Função responsável pelas CORES de acordo com a Meta
-        function getStatusInfo(perc) {
-            if (perc >= configuracoes.metaMax) return { color: 'text-emerald-600', icon: 'chevrons-up', bg: 'bg-emerald-50 border-emerald-100' };
-            if (perc >= configuracoes.metaMin) return { color: 'text-blue-600', icon: 'chevron-up', bg: 'bg-blue-50 border-blue-100' };
-            return { color: 'text-rose-600', icon: 'chevron-down', bg: 'bg-rose-50 border-rose-100' };
-        }
-
         function updateAll() {
-            let tR = 0, tN = 0, tC = 0, growths = [];
+            let base = configuracoes.metaInicial;
+            let percentual = configuracoes.metaPerc / 100;
             
+            let htmlTabela = '';
+            let saldoGlobalAno = 0; // Se negativo, vira dívida para a meta do mês
+            
+            let totalFaturamento = 0;
+            let totalMetaIdeal = 0;
+            let ultimaBaseAtiva = 0;
+            let somaNovos = 0;
+            let somaCanc = 0;
+
+            let labelsChart = [];
+            let faturamentoChart = [];
+            let metasChart = [];
+            let efetivoChart = [];
+            let coresBarChart = [];
+            
+            // Gráficos Clientes
+            let baseAtivaChart = [];
+            let novosChart = [];
+            let cancChart = [];
+
             dados.forEach((d, i) => {
-                tR += d.recebido; tN += d.novos; tC += d.cancelados;
+                // 1. Meta Base do Mês (Composta)
+                let metaPadraoMes = base * Math.pow(1 + percentual, i);
                 
-                // Cálculo da Evolução Mês a Mês (Percentual do Faturamento)
-                if (i > 0) {
-                    const antFat = dados[i-1].recebido;
-                    const cell = document.getElementById(`status-${i}`);
-                    if (antFat > 0 && d.recebido > 0) {
-                        let perc = ((d.recebido - antFat) / antFat) * 100;
-                        growths.push(perc);
-                        
-                        const status = getStatusInfo(perc);
-                        if (cell) {
-                            cell.innerHTML = `
-                                <div class="inline-flex items-center justify-center gap-1.5 ${status.color} ${status.bg} px-3 py-1 rounded-lg border">
-                                    <i data-lucide="${status.icon}" class="w-4 h-4"></i>
-                                    <span class="font-black text-sm tracking-tight">${perc.toFixed(2)}%</span>
-                                </div>
-                            `;
-                        }
-                    } else if (cell) {
-                        cell.innerHTML = '<span class="text-slate-400 text-sm font-semibold">-</span>';
-                    }
+                // 2. Cria a "Meta Ajustada" verificando se o Balanço Geral (saldoGlobalAno) tá negativo
+                let dividaPassada = saldoGlobalAno < 0 ? Math.abs(saldoGlobalAno) : 0;
+                let metaAjustada = metaPadraoMes + dividaPassada;
+                
+                // Formatação da Coluna "Meta Ajustada"
+                let stringMeta = `<div class="font-black text-slate-800 tracking-tight text-[15px]">R$ ${formatBRL(metaAjustada)}</div>`;
+                if(dividaPassada > 0) {
+                    stringMeta += `<div class="text-[9px] text-rose-500 font-bold mt-1 uppercase tracking-wider" title="Soma da Meta Padrão (R$ ${formatBRL(metaPadraoMes)}) + Dívida Passada (R$ ${formatBRL(dividaPassada)})">Inclui Déficit Passado</div>`;
+                } else {
+                    stringMeta += `<div class="text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-wider">Meta Base Sem Dívidas</div>`;
                 }
+
+                let stringDeficit = `<span class="text-slate-400 font-medium text-xs">-</span>`;
+                let stringPct = `<span class="text-slate-400 font-medium text-xs">-</span>`;
+                let stringCrescEfetivo = `<span class="text-slate-400 font-medium text-xs">-</span>`;
+
+                let recebido = d.recebido || 0;
+
+                if(recebido > 0) {
+                    totalFaturamento += recebido;
+                    totalMetaIdeal += metaPadraoMes; 
+                    
+                    if(d.ativos > 0) ultimaBaseAtiva = d.ativos;
+                    somaNovos += d.novos || 0;
+                    somaCanc += d.cancelados || 0;
+
+                    // 3. Desempenho Isolado do Mês (Avaliamos contra a Padrão para ver se o mês lucrou/perdeu)
+                    let saldoMes = recebido - metaPadraoMes;
+                    let pctAtingida = (recebido / metaPadraoMes) * 100;
+                    
+                    // 4. O Saldo Global da empresa é atualizado somando/subtraindo o desempenho do mês
+                    saldoGlobalAno += saldoMes; 
+                    
+                    // 5. Crescimento Efetivo (Idêntico à Planilha)
+                    let crescEfetivo = configuracoes.metaPerc * (pctAtingida / 100);
+
+                    // Renderização Deficit/Sobra Isolado do Mês
+                    if (saldoMes < 0) {
+                        stringDeficit = `<span class="text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded border border-rose-100 text-xs whitespace-nowrap" title="Mês operou no prejuízo">- R$ ${formatBRL(Math.abs(saldoMes))}</span>`;
+                    } else {
+                        stringDeficit = `<span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded border border-emerald-100 text-xs whitespace-nowrap" title="Mês operou no lucro">+ R$ ${formatBRL(saldoMes)}</span>`;
+                    }
+
+                    // Renderização % Realizada
+                    if (pctAtingida >= 100) {
+                        stringPct = `<span class="text-emerald-600 font-black flex items-center justify-end gap-1 text-sm"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> ${pctAtingida.toFixed(2)}%</span>`;
+                    } else {
+                        stringPct = `<span class="text-rose-600 font-black flex items-center justify-end gap-1 text-sm"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> ${pctAtingida.toFixed(2)}%</span>`;
+                    }
+
+                    // Renderização Crescimento Efetivo
+                    let corCresc = crescEfetivo >= configuracoes.metaPerc ? 'text-emerald-600' : 'text-rose-600';
+                    stringCrescEfetivo = `<span class="${corCresc} font-black text-[15px]">${crescEfetivo.toFixed(2)}%</span>`;
+                    
+                    coresBarChart.push(crescEfetivo >= configuracoes.metaPerc ? '#10b981' : '#f43f5e');
+
+                    labelsChart.push(d.mes.substring(0,3));
+                    faturamentoChart.push(recebido);
+                    metasChart.push(metaAjustada); // No gráfico de linha mostrará a exigida!
+                    efetivoChart.push(crescEfetivo);
+                    
+                    baseAtivaChart.push(d.ativos || 0);
+                    novosChart.push(d.novos || 0);
+                    cancChart.push(d.cancelados || 0);
+                }
+
+                htmlTabela += `
+                    <tr class="hover:bg-slate-50/80 transition-colors group border-b border-slate-100 last:border-0">
+                        <td class="p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors text-sm">${d.mes}</td>
+                        <td data-label="Valor Recebido" class="p-2 w-40"><input type="text" value="${recebido > 0 ? formatBRL(recebido) : ''}" placeholder="0,00" onchange="window.handleInput(this, ${i}, 'recebido', true)" class="input-field text-right font-black text-blue-900 tracking-wide bg-blue-50/30 text-sm"></td>
+                        <td data-label="Meta Ajustada" class="p-2 text-right bg-slate-50/50">${stringMeta}</td>
+                        <td data-label="Desempenho" class="p-2 text-right">${stringDeficit}</td>
+                        <td data-label="Base Ativa" class="p-2 w-20"><input type="text" value="${d.ativos > 0 ? formatNum(d.ativos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'ativos', false)" class="input-field text-right text-slate-700 font-bold text-sm"></td>
+                        <td data-label="Novos" class="p-2 w-20"><input type="text" value="${d.novos > 0 ? formatNum(d.novos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'novos', false)" class="input-field text-right text-emerald-600 font-bold text-sm bg-emerald-50/30"></td>
+                        <td data-label="Canc." class="p-2 w-20"><input type="text" value="${d.cancelados > 0 ? formatNum(d.cancelados) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold text-sm bg-rose-50/30"></td>
+                        <td data-label="% Realizada" class="p-3 text-right bg-slate-50/30">${stringPct}</td>
+                        <td data-label="Cresc. Efetivo" class="p-3 text-right">${stringCrescEfetivo}</td>
+                    </tr>
+                `;
             });
             
-            lucide.createIcons(); // Recarrega os ícones gerados via JS nas setas
-
-            // Atualiza Cards Acumulados
-            document.getElementById('kpi-faturamento').innerText = tR.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
-            document.getElementById('kpi-ativacoes').innerText = tN.toLocaleString('pt-BR');
-            document.getElementById('kpi-churn').innerText = tC.toLocaleString('pt-BR');
-            
-            // Atualiza a Média de Crescimento Global
-            const valKpiGlobal = document.getElementById('kpi-crescimento');
-            const iconKpiGlobal = document.getElementById('status-icon-global');
-            const textKpiGlobal = document.getElementById('status-text-global');
-
-            if (growths.length > 0) {
-                const avg = growths.reduce((a,b) => a+b, 0) / growths.length;
-                const statusGlobal = getStatusInfo(avg);
-                
-                valKpiGlobal.innerText = avg.toFixed(2) + "%";
-                valKpiGlobal.className = `text-4xl lg:text-5xl font-black tracking-tighter transition-colors duration-300 ${statusGlobal.color}`;
-                iconKpiGlobal.innerHTML = `<i data-lucide="${statusGlobal.icon}" class="w-8 h-8 ${statusGlobal.color}"></i>`;
-                
-                if (avg >= configuracoes.metaMax) textKpiGlobal.innerHTML = 'Excepcional <span class="text-emerald-600">Acima da máxima</span>';
-                else if (avg >= configuracoes.metaMin) textKpiGlobal.innerHTML = 'Saudável <span class="text-blue-600">Dentro da meta</span>';
-                else textKpiGlobal.innerHTML = 'Atenção <span class="text-rose-600">Abaixo da mínima</span>';
-            } else {
-                valKpiGlobal.innerText = "0.00%";
-                valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-slate-300 transition-colors duration-300";
-                iconKpiGlobal.innerHTML = "";
-                textKpiGlobal.innerText = "Aguardando dados comparativos...";
-            }
+            document.getElementById('table-body').innerHTML = htmlTabela;
             lucide.createIcons();
+
+            // Atualiza KPIs Topo
+            document.getElementById('kpi-faturamento').innerText = totalFaturamento.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+            document.getElementById('kpi-meta-acumulada').innerText = totalMetaIdeal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+            document.getElementById('kpi-base-ativa').innerText = ultimaBaseAtiva.toLocaleString('pt-BR');
+            document.getElementById('kpi-novos-acum').innerText = somaNovos.toLocaleString('pt-BR');
+            document.getElementById('kpi-canc-acum').innerText = somaCanc.toLocaleString('pt-BR');
             
-            // Sincroniza dados novos com o Chart.js
-            updateCharts(growths);
+            // Calculo simples de Churn estimado = (Cancelados / Base Ativa Máxima)
+            let churnRate = 0;
+            if(ultimaBaseAtiva > 0) churnRate = (somaCanc / (ultimaBaseAtiva + somaCanc)) * 100;
+            document.getElementById('kpi-churn').innerText = churnRate.toFixed(2) + "%";
+
+            // Atualiza Balanço Global
+            const valKpiGlobal = document.getElementById('kpi-saldo-global');
+            const subKpiGlobal = document.getElementById('kpi-saldo-sub');
+            
+            if(totalFaturamento > 0) {
+                if(saldoGlobalAno < 0) {
+                    valKpiGlobal.innerText = "- R$ " + formatBRL(Math.abs(saldoGlobalAno));
+                    valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-rose-600 transition-colors duration-300";
+                    subKpiGlobal.innerHTML = 'Déficit acumulado no ano. <span class="text-rose-500">Recuperação necessária.</span>';
+                } else {
+                    valKpiGlobal.innerText = "+ R$ " + formatBRL(saldoGlobalAno);
+                    valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-emerald-600 transition-colors duration-300";
+                    subKpiGlobal.innerHTML = 'Superávit acumulado. <span class="text-emerald-600">Empresa no lucro anual!</span>';
+                }
+            } else {
+                valKpiGlobal.innerText = "R$ 0,00";
+                valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-slate-300";
+                subKpiGlobal.innerText = "Aguardando preenchimentos...";
+            }
+
+            updateCharts(labelsChart, faturamentoChart, metasChart, efetivoChart, coresBarChart, baseAtivaChart, novosChart, cancChart);
         }
 
         // ==========================================
-        // 6. GRÁFICOS (CHART.JS)
+        // GRÁFICOS (CHART.JS)
         // ==========================================
         function initCharts() {
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.font.weight = '600';
 
             const tooltipStyle = {
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                titleColor: '#1e293b',
-                bodyColor: '#475569',
-                borderColor: '#e2e8f0',
-                borderWidth: 1,
-                padding: 12,
-                boxPadding: 6,
-                usePointStyle: true,
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', titleColor: '#1e293b', bodyColor: '#475569',
+                borderColor: '#e2e8f0', borderWidth: 1, padding: 12, usePointStyle: true,
                 titleFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' }
             };
+            const basicScales = { y: { grid: { color: 'rgba(0,0,0,0.03)' }, border: { display: false } }, x: { grid: { display: false }, border: { display: false } } };
 
-            const ctxLine = document.getElementById('chartEvolucao').getContext('2d');
-            let gradientLine = ctxLine.createLinearGradient(0, 0, 0, 300);
-            gradientLine.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
-            gradientLine.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-
-            chartEvolucao = new Chart(ctxLine, { 
+            // Gráfico 1: Linha Faturamento x Meta
+            const ctxLine = document.getElementById('chartLine').getContext('2d');
+            chartLine = new Chart(ctxLine, { 
                 type: 'line', 
-                data: { 
-                    labels: meses.map(m => m.substring(0,3)), 
-                    datasets: [{ 
-                        label: 'Faturamento R$', 
-                        data: [], 
-                        borderColor: '#10b981', 
-                        borderWidth: 3,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#10b981',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        fill: true, 
-                        backgroundColor: gradientLine, 
-                        tension: 0.4 
-                    }] 
-                }, 
-                options: { 
-                    responsive: true, maintainAspectRatio: false, 
-                    plugins: { legend: { display: false }, tooltip: tooltipStyle }, 
-                    scales: { 
-                        y: { grid: { color: 'rgba(0,0,0,0.03)' }, beginAtZero: true, border: { display: false } }, 
-                        x: { grid: { display: false }, border: { display: false } } 
-                    },
-                    interaction: { mode: 'index', intersect: false }
-                } 
+                data: { labels: [], datasets: [
+                    { label: 'Realizado (R$)', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', borderWidth: 3, fill: true, tension: 0.3 },
+                    { label: 'Meta Ajustada (R$)', data: [], borderColor: '#f43f5e', borderDash: [5, 5], pointRadius: 0, borderWidth: 2, tension: 0.3 }
+                ]}, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: tooltipStyle }, scales: basicScales, interaction: { mode: 'index', intersect: false } } 
             });
 
-            const ctxBar = document.getElementById('chartMeta').getContext('2d');
-            chartMeta = new Chart(ctxBar, { 
+            // Gráfico 2: Barras Crescimento Efetivo
+            const ctxBar = document.getElementById('chartBar').getContext('2d');
+            chartBar = new Chart(ctxBar, { 
                 type: 'bar', 
-                data: { 
-                    labels: meses.slice(1).map(m => m.substring(0,3)), 
-                    datasets: [{ 
-                        label: 'Crescimento %',
-                        data: [], 
-                        backgroundColor: [],
-                        borderRadius: 6,
-                        borderSkipped: false
-                    }] 
-                }, 
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false }, 
-                        tooltip: { 
-                            ...tooltipStyle,
-                            callbacks: { label: (ctx) => `Crescimento: ${ctx.raw.toFixed(2)}%` } 
-                        } 
-                    },
-                    scales: { 
-                        y: { grid: { color: 'rgba(0,0,0,0.03)' }, border: { display: false } },
-                        x: { grid: { display: false }, border: { display: false } }
-                    }
-                } 
+                data: { labels: [], datasets: [{ label: 'Cresc. Efetivo (%)', data: [], backgroundColor: [], borderRadius: 6 }] }, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...tooltipStyle, callbacks: { label: (ctx) => `Efetivo: ${ctx.raw.toFixed(2)}%` } } }, scales: basicScales } 
+            });
+
+            // Gráfico 3: Linha Base Ativa
+            const ctxBase = document.getElementById('chartBase').getContext('2d');
+            chartBase = new Chart(ctxBase, { 
+                type: 'line', 
+                data: { labels: [], datasets: [{ label: 'Clientes Ativos', data: [], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 3, fill: true, tension: 0.4 }] }, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tooltipStyle }, scales: basicScales } 
+            });
+
+            // Gráfico 4: Barras Novos vs Canc
+            const ctxClientes = document.getElementById('chartClientes').getContext('2d');
+            chartClientes = new Chart(ctxClientes, { 
+                type: 'bar', 
+                data: { labels: [], datasets: [
+                    { label: 'Novos', data: [], backgroundColor: '#3b82f6', borderRadius: 4 },
+                    { label: 'Cancelados', data: [], backgroundColor: '#f43f5e', borderRadius: 4 }
+                ]}, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: tooltipStyle }, scales: basicScales, interaction: { mode: 'index', intersect: false } } 
             });
         }
 
-        function updateCharts(growths) {
-            if (!chartEvolucao) return;
+        function updateCharts(labels, faturamento, metas, efetivo, cores, baseAtiva, novos, canc) {
+            if (!chartLine) return;
             
-            // Popula os dados do gráfico de linha (Faturamento absoluto)
-            chartEvolucao.data.datasets[0].data = dados.map(d => d.recebido);
-            chartEvolucao.update();
+            // Update Line
+            chartLine.data.labels = labels;
+            chartLine.data.datasets[0].data = faturamento;
+            chartLine.data.datasets[1].data = metas;
+            chartLine.update();
             
-            // Popula os dados e cores do gráfico de barras (Percentual de crescimento)
-            chartMeta.data.datasets[0].data = growths;
-            chartMeta.data.datasets[0].backgroundColor = growths.map(g => {
-                if (g >= configuracoes.metaMax) return '#10b981'; // Verde
-                if (g >= configuracoes.metaMin) return '#3b82f6'; // Azul
-                return '#f43f5e'; // Vermelho
-            });
-            chartMeta.update();
+            // Update Bar Efetivo
+            chartBar.data.labels = labels;
+            chartBar.data.datasets[0].data = efetivo;
+            chartBar.data.datasets[0].backgroundColor = cores;
+            chartBar.update();
+
+            // Update Line Base
+            chartBase.data.labels = labels;
+            chartBase.data.datasets[0].data = baseAtiva;
+            chartBase.update();
+
+            // Update Bar Clientes
+            chartClientes.data.labels = labels;
+            chartClientes.data.datasets[0].data = novos;
+            chartClientes.data.datasets[1].data = canc;
+            chartClientes.update();
         }
 
-        // ==========================================
-        // 7. INICIALIZAÇÃO
-        // ==========================================
         window.onload = () => { 
             if (localStorage.getItem('igp_auth') === 'true') { 
-                initCharts(); 
-                loadData(); 
+                initCharts(); loadData(); 
             } 
         };
     </script>
