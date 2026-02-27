@@ -3,99 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IGP FIBRA Gerencial</title>
+    <title>IGP FIBRA | Dashboard Gerencial</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        /* Restauração do Visual Antigo (Slate & Emerald) */
-        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; display: none; -webkit-tap-highlight-color: transparent; }
-        .glass-card { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
-        .input-field { background: #0f172a; border: 1px solid #334155; transition: all 0.2s; color: white; width: 100%; font-size: 16px; border-radius: 0.75rem; padding: 0.5rem 0.75rem; }
-        .input-field:focus { border-color: #10b981; outline: none; box-shadow: 0 0 0 1px #10b981; }
-        .developer-tag { letter-spacing: 0.15em; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
-        
-        /* Tabela Responsiva para Celular */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body { 
+            background-color: #eef4f9; /* Branco gelo com leve toque azulado */
+            background-image: 
+                radial-gradient(circle at 15% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 85% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
+            color: #1e293b; /* Texto escuro principal */
+            font-family: 'Inter', sans-serif; 
+            display: none; /* Escondido até a autenticação validar */
+            -webkit-tap-highlight-color: transparent; 
+            min-height: 100vh;
+        }
+
+        /* Premium Light Glassmorphism */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.90); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 1); 
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(37, 99, 235, 0.15);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
+        }
+
+        /* Inputs Editáveis na Tabela */
+        .input-field { 
+            background: #f8fafc; 
+            border: 1px solid transparent; 
+            transition: all 0.3s ease; 
+            color: #1e293b; 
+            width: 100%; 
+            border-radius: 0.5rem; 
+            padding: 0.5rem; 
+        }
+        .input-field:hover { background: #f1f5f9; }
+        .input-field:focus { 
+            background: #ffffff;
+            border-color: rgba(37, 99, 235, 0.4); 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); 
+        }
+
+        /* Inputs de Metas */
+        .meta-input {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+            transition: all 0.3s ease;
+        }
+        .meta-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Responsividade da Tabela Mobile */
         @media (max-width: 768px) {
             .resp-table thead { display: none; }
-            .resp-table tr { display: flex; flex-direction: column; padding: 1.25rem; margin-bottom: 1.25rem; background: rgba(30, 41, 59, 0.5); border-radius: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.05); }
-            .resp-table td { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border: none; }
-            .resp-table td::before { content: attr(data-label); font-weight: bold; color: #64748b; font-size: 0.75rem; text-transform: uppercase; }
-            .resp-table td:first-child { justify-content: center; font-size: 1.15rem; font-weight: 800; border-bottom: 1px solid #334155; margin-bottom: 0.5rem; color: #10b981; }
+            .resp-table tr { 
+                display: flex; flex-direction: column; padding: 1.25rem; margin-bottom: 1rem; 
+                background: #ffffff; border-radius: 1rem; border: 1px solid #e2e8f0; 
+                box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            }
+            .resp-table td { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border: none; }
+            .resp-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+            .resp-table td:first-child { justify-content: center; font-size: 1.1rem; font-weight: 800; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; margin-bottom: 0.5rem; color: #1e293b; }
             .resp-table td:first-child::before { display: none; }
         }
     </style>
 </head>
-<body class="p-4 lg:p-8">
-    <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 text-center md:text-left">
-            <div>
-                <h1 class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tighter">IGP FIBRA Gerencial</h1>
-                <p class="text-[10px] developer-tag font-bold text-emerald-500/80 uppercase mt-1 italic">Developed by <span class="text-emerald-400 text-sm italic ml-1 font-black">Patrick Carmo</span></p>
+<body class="p-4 lg:p-8 relative">
+
+    <div class="max-w-7xl mx-auto space-y-6 lg:space-y-8">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4">
+            <div class="flex flex-col items-center md:items-start">
+                <img src="logo igp.png" alt="IGP FIBRA Logo" class="h-16 lg:h-20 object-contain mb-2 drop-shadow-sm">
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+                    Dashboard Gerencial <span class="text-slate-300 mx-2">|</span> Dev. Patrick Carmo
+                </p>
             </div>
-            <div class="flex flex-wrap justify-center items-center gap-4">
-                <div id="save-indicator" class="opacity-0 text-[10px] uppercase font-bold text-emerald-500 flex items-center gap-2">
-                    <span>Sincronizado Cloud</span>
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+            
+            <div class="flex items-center gap-3 flex-wrap justify-center">
+                <div id="save-indicator" class="opacity-0 transition-opacity duration-300 text-xs font-bold text-blue-600 flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
+                    <i data-lucide="cloud-check" class="w-4 h-4"></i>
+                    <span>Sincronizado</span>
                 </div>
-                <button onclick="window.fazerLogout()" class="bg-slate-800 text-slate-400 px-6 py-2 rounded-xl border border-slate-700 text-xs font-bold uppercase hover:bg-rose-500/20 hover:text-rose-400 transition-all">Sair</button>
+                
+                <button onclick="window.toggleHelp(true)" class="group flex items-center gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-sky-200 text-sm font-bold transition-all shadow-sm">
+                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Como Funciona
+                </button>
+
+                <button onclick="window.fazerLogout()" class="group flex items-center gap-2 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-rose-200 text-sm font-bold transition-all shadow-sm">
+                    <i data-lucide="power" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Sair
+                </button>
             </div>
         </header>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="glass-card p-5 rounded-2xl border-emerald-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest">Faturamento Total</span>
-                <span id="kpi-faturamento" class="text-xl lg:text-3xl font-black text-slate-100">R$ 0,00</span>
+        <div class="glass-card rounded-2xl p-6 lg:p-8 flex flex-col lg:flex-row gap-8 items-center border-l-4 border-l-blue-600">
+            <div class="w-full lg:w-1/2 space-y-5">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
+                        <i data-lucide="target" class="w-4 h-4 text-blue-600"></i> Parâmetros de Crescimento
+                    </h3>
+                    <div class="flex gap-3 text-[10px] font-bold uppercase tracking-wider">
+                        <span class="flex items-center gap-1 text-blue-600"><div class="w-2 h-2 rounded-full bg-blue-600"></div> Mínimo</span>
+                        <span class="flex items-center gap-1 text-emerald-500"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Máximo</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider cursor-help" title="Define o crescimento mínimo aceitável">Meta Mínima (%)</label>
+                        <div class="relative mt-1.5">
+                            <input type="text" id="input-meta-min" class="meta-input rounded-xl w-full py-2.5 pl-4 pr-8 text-blue-900 font-black text-lg" placeholder="1.5" onchange="window.updateMetas()">
+                            <span class="absolute right-4 top-3 text-slate-400 font-bold">%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider cursor-help" title="Define a meta de excelência">Meta Máxima (%)</label>
+                        <div class="relative mt-1.5">
+                            <input type="text" id="input-meta-max" class="meta-input rounded-xl w-full py-2.5 pl-4 pr-8 text-emerald-700 font-black text-lg" placeholder="2.0" onchange="window.updateMetas()">
+                            <span class="absolute right-4 top-3 text-slate-400 font-bold">%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="glass-card p-5 rounded-2xl border-blue-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest text-blue-400">Ativações</span>
-                <span id="kpi-ativacoes" class="text-xl lg:text-3xl font-black text-slate-100">0</span>
-            </div>
-            <div class="glass-card p-5 rounded-2xl border-rose-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest text-rose-400">Cancelados</span>
-                <span id="kpi-churn" class="text-xl lg:text-3xl font-black text-slate-100">0</span>
-            </div>
-            <div class="glass-card p-5 rounded-2xl border-purple-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest text-purple-400">Cresc. Fat.</span>
-                <span id="kpi-crescimento" class="text-xl lg:text-3xl font-black text-slate-100">0%</span>
+            
+            <div class="w-full lg:w-1/2 flex flex-col items-end border-t border-slate-200 lg:border-t-0 lg:border-l pt-6 lg:pt-0 lg:pl-8">
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Média de Crescimento Global</p>
+                <div class="flex items-end gap-3">
+                    <span id="kpi-crescimento" class="text-5xl font-black tracking-tighter transition-colors duration-300">0.00%</span>
+                    <div id="status-icon-global" class="mb-2 transition-transform duration-300"></div>
+                </div>
+                <p id="status-text-global" class="text-sm font-bold mt-2 text-slate-500">Aguardando dados...</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div class="xl:col-span-2 glass-card rounded-2xl p-2 lg:p-4">
-                <h2 class="p-4 font-bold text-slate-400 flex items-center gap-2 border-b border-slate-700/50 mb-4"><i data-lucide="layout-list" class="w-4 h-4"></i> Lançamentos</h2>
-                <table class="w-full resp-table">
-                    <thead>
-                        <tr class="text-slate-500 text-[10px] uppercase font-bold border-b border-slate-700">
-                            <th class="p-4">Mês</th>
-                            <th class="p-4 text-right">Faturamento</th>
-                            <th class="p-4 text-right">Base</th>
-                            <th class="p-4 text-right">Novos</th>
-                            <th class="p-4 text-right">Cancelados</th>
-                            <th class="p-4 text-center">Meta Fat.</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body"></tbody>
-                </table>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            <div class="glass-card p-6 lg:p-7 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="wallet" class="w-40 h-40 text-blue-900"></i></div>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
+                    Faturamento Acumulado <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-emerald-500"></i>
+                </span>
+                <span id="kpi-faturamento" class="text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">R$ 0</span>
+            </div>
+            <div class="glass-card p-6 lg:p-7 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="user-plus" class="w-40 h-40 text-blue-900"></i></div>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
+                    Novas Ativações Totais <i data-lucide="activity" class="w-3.5 h-3.5 text-blue-500"></i>
+                </span>
+                <span id="kpi-ativacoes" class="text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">0</span>
+            </div>
+            <div class="glass-card p-6 lg:p-7 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 opacity-5 group-hover:scale-110 transition-transform duration-500"><i data-lucide="user-minus" class="w-40 h-40 text-blue-900"></i></div>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
+                    Cancelamentos (Churn) <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-500"></i>
+                </span>
+                <span id="kpi-churn" class="text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">0</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 pb-10">
+            <div class="xl:col-span-2 glass-card rounded-2xl overflow-hidden flex flex-col shadow-sm">
+                <div class="p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center">
+                    <h2 class="font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                        <i data-lucide="calendar-days" class="w-4 h-4 text-blue-600"></i> Histórico Mensal Editável
+                    </h2>
+                </div>
+                <div class="p-2 lg:p-4 flex-1 overflow-x-auto">
+                    <table class="w-full resp-table whitespace-nowrap">
+                        <thead>
+                            <tr class="text-slate-500 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
+                                <th class="p-4 text-left">Mês</th>
+                                <th class="p-4 text-right">Faturamento (R$)</th>
+                                <th class="p-4 text-right">Base Ativa</th>
+                                <th class="p-4 text-right">Novos</th>
+                                <th class="p-4 text-right">Cancelados</th>
+                                <th class="p-4 text-center">Evolução (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="flex flex-col gap-6">
-                <div class="glass-card p-4 rounded-2xl h-64"><canvas id="chartEvolucao"></canvas></div>
-                <div class="glass-card p-4 rounded-2xl h-64"><canvas id="chartMeta"></canvas></div>
+                <div class="glass-card p-6 rounded-2xl flex-1 min-h-[300px] flex flex-col shadow-sm">
+                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                        Evolução da Receita Bruta
+                        <i data-lucide="line-chart" class="w-4 h-4 text-emerald-500"></i>
+                    </h3>
+                    <div class="relative flex-1"><canvas id="chartEvolucao"></canvas></div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl flex-1 min-h-[300px] flex flex-col shadow-sm">
+                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                        Crescimento Mensal (% Meta)
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>
+                    </h3>
+                    <div class="relative flex-1"><canvas id="chartMeta"></canvas></div>
+                </div>
             </div>
         </div>
     </div>
+
+    <div id="help-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/40 backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="help-content">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-blue-600"></i> Guia da Dashboard
+                </h2>
+                <button onclick="window.toggleHelp(false)" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1 space-y-6 text-slate-600 text-sm">
+                
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="bar-chart" class="w-4 h-4 text-blue-500"></i> O que é a Evolução (%)?
+                    </h3>
+                    <p class="leading-relaxed">A <strong>Evolução</strong> é o cálculo do crescimento financeiro da empresa. Ela compara o <span class="text-slate-800 font-semibold">Faturamento</span> do mês atual com o do mês anterior. O sistema calcula automaticamente se a receita subiu ou desceu percentualmente.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="target" class="w-4 h-4 text-blue-500"></i> Como as Metas (Mínima e Máxima) afetam as cores?
+                    </h3>
+                    <p class="leading-relaxed">Você define nos campos superiores qual a sua meta base (Mínima) e a sua meta ideal (Máxima). O sistema usa isso para pintar a Tabela, o Gráfico de Barras e o KPI Global:</p>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
+                        <div class="flex items-start gap-3">
+                            <div class="w-3 h-3 mt-1 rounded-full bg-emerald-500 shrink-0"></div> 
+                            <p><strong>Verde (Excepcional):</strong> O crescimento atingiu ou ultrapassou a <strong>Meta Máxima</strong>.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-3 h-3 mt-1 rounded-full bg-blue-500 shrink-0"></div> 
+                            <p><strong>Azul (Saudável):</strong> O crescimento ficou entre a Mínima e a Máxima (no alvo).</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-3 h-3 mt-1 rounded-full bg-rose-500 shrink-0"></div> 
+                            <p><strong>Vermelho (Atenção):</strong> O crescimento fechou abaixo da <strong>Meta Mínima</strong> exigida.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-4 h-4 text-blue-500"></i> Como preencher os dados?
+                    </h3>
+                    <p class="leading-relaxed">Basta clicar nos campos em branco da <strong>Tabela de Histórico Mensal</strong> e digitar. O sistema aceita números diretamente, formata em Reais (R$) automaticamente e calcula a evolução assim que você termina de digitar. Configurei o salvamento na nuvem do Google (Firebase) acontecer instantaneamente.</p>
+                </div>
+
+            </div>
+            
+            <div class="p-5 border-t border-slate-100 bg-slate-50 text-right rounded-b-3xl">
+                <button onclick="window.toggleHelp(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
+                    Entendi
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Seguranca
+        // ==========================================
+        // 1. AUTENTICAÇÃO E SETUP INICIAL
+        // ==========================================
         if (localStorage.getItem('igp_auth') !== 'true') window.location.href = 'login.html';
         else document.body.style.display = "block";
-
         window.fazerLogout = () => { localStorage.removeItem('igp_auth'); window.location.href = 'login.html'; };
 
+        lucide.createIcons(); // Carrega ícones
+
+        // Configuração do Banco de Dados
         const firebaseConfig = {
             apiKey: "AIzaSyDjh5UHLv-XHjVuMUeYYk9dLsQp1THEGhI",
             authDomain: "dashboard-gerencial-igpfibra.firebaseapp.com",
@@ -104,86 +306,301 @@
             messagingSenderId: "119051294297",
             appId: "1:119051294297:web:ff8320861d3b7adcf94348"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+        // ==========================================
+        // 2. VARIÁVEIS GLOBAIS
+        // ==========================================
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
+        let configuracoes = { metaMin: 1.5, metaMax: 2.0 };
+        let saveTimeout;
+        let chartEvolucao, chartMeta;
 
+        // Funções Úteis de Formatação
+        const formatBRL = (value) => new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+        const formatNum = (value) => new Intl.NumberFormat('pt-BR').format(value);
+        const parseCurrency = (str) => {
+            if (!str) return 0;
+            const numeric = str.replace(/[^\d,-]/g, '').replace(',', '.');
+            return parseFloat(numeric) || 0;
+        };
+
+        // ==========================================
+        // 3. UI: MODAL DE AJUDA
+        // ==========================================
+        window.toggleHelp = (show) => {
+            const modal = document.getElementById('help-modal');
+            const content = document.getElementById('help-content');
+            
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+            } else {
+                modal.classList.add('opacity-0');
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        };
+
+        // ==========================================
+        // 4. FIREBASE: LOAD E SAVE
+        // ==========================================
         async function loadData() {
             const docSnap = await getDoc(doc(db, "gestao_igp", "2026"));
-            if (docSnap.exists()) dados = docSnap.data().meses;
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.meses) dados = data.meses;
+                if (data.configuracoes) {
+                    configuracoes.metaMin = data.configuracoes.metaMin || data.configuracoes.metaPerc || 1.5;
+                    configuracoes.metaMax = data.configuracoes.metaMax || 2.0;
+                }
+            }
+            
+            // Popula os inputs de Metas com os dados carregados
+            document.getElementById('input-meta-min').value = configuracoes.metaMin;
+            document.getElementById('input-meta-max').value = configuracoes.metaMax;
+
             renderTable();
             updateAll();
         }
 
         async function saveData() {
             const indicator = document.getElementById('save-indicator');
-            await setDoc(doc(db, "gestao_igp", "2026"), { meses: dados });
-            indicator.style.opacity = "1";
-            setTimeout(() => indicator.style.opacity = "0", 1500);
+            indicator.style.opacity = "1"; // Mostra "Sincronizado"
+            await setDoc(doc(db, "gestao_igp", "2026"), { meses: dados, configuracoes: configuracoes });
+            setTimeout(() => indicator.style.opacity = "0", 2000); // Esconde após 2s
         }
 
-        window.updateData = (index, field, value) => {
-            const numericValue = value.replace(/\D/g, '');
-            dados[index][field] = parseInt(numericValue) || 0;
+        function triggerSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveData, 1000); // Evita flood no banco salvando 1s após parar de digitar
+        }
+
+        // ==========================================
+        // 5. LÓGICA DE NEGÓCIO E RENDERIZAÇÃO
+        // ==========================================
+        window.updateMetas = () => {
+            configuracoes.metaMin = parseFloat(document.getElementById('input-meta-min').value.replace(',', '.')) || 0;
+            configuracoes.metaMax = parseFloat(document.getElementById('input-meta-max').value.replace(',', '.')) || 0;
             updateAll();
-            saveData();
+            triggerSave();
+        }
+
+        window.handleInput = (element, index, field, isCurrency) => {
+            let val = element.value;
+            let numericVal = isCurrency ? parseCurrency(val) : parseInt(val.replace(/\D/g, '')) || 0;
+            
+            dados[index][field] = numericVal; // Atualiza variável
+            element.value = isCurrency ? formatBRL(numericVal) : formatNum(numericVal); // Devolve formatado
+            
+            updateAll();
+            triggerSave();
         };
 
         function renderTable() {
             document.getElementById('table-body').innerHTML = dados.map((item, idx) => `
-                <tr class="border-b border-slate-700/30">
-                    <td class="p-2 font-bold text-emerald-400">${item.mes}</td>
-                    <td data-label="Faturamento" class="p-2"><input type="text" value="${item.recebido.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'recebido', this.value)" class="input-field text-right font-bold text-white"></td>
-                    <td data-label="Base Ativa" class="p-2"><input type="text" value="${item.ativos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'ativos', this.value)" class="input-field text-right"></td>
-                    <td data-label="Novos" class="p-2"><input type="text" value="${item.novos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'novos', this.value)" class="input-field text-right text-blue-400"></td>
-                    <td data-label="Cancels" class="p-2"><input type="text" value="${item.cancelados.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'cancelados', this.value)" class="input-field text-right text-rose-400"></td>
-                    <td data-label="Meta Fat." class="p-2 text-center font-black" id="status-${idx}">-</td>
+                <tr class="hover:bg-slate-50/50 transition-colors group border-b border-slate-100 last:border-0">
+                    <td class="p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors">${item.mes}</td>
+                    <td data-label="Faturamento" class="p-2"><input type="text" value="${formatBRL(item.recebido)}" onchange="window.handleInput(this, ${idx}, 'recebido', true)" class="input-field text-right font-black text-slate-800 tracking-wide"></td>
+                    <td data-label="Base Ativa" class="p-2"><input type="text" value="${formatNum(item.ativos)}" onchange="window.handleInput(this, ${idx}, 'ativos', false)" class="input-field text-right text-slate-600 font-semibold"></td>
+                    <td data-label="Novos" class="p-2"><input type="text" value="${formatNum(item.novos)}" onchange="window.handleInput(this, ${idx}, 'novos', false)" class="input-field text-right text-blue-600 font-bold"></td>
+                    <td data-label="Cancels" class="p-2"><input type="text" value="${formatNum(item.cancelados)}" onchange="window.handleInput(this, ${idx}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold"></td>
+                    <td data-label="Evolução" class="p-4 text-center" id="status-${idx}">
+                        <span class="text-slate-400 text-sm font-semibold">-</span>
+                    </td>
                 </tr>
             `).join('');
-            lucide.createIcons();
+        }
+
+        // Função responsável pelas CORES de acordo com a Meta
+        function getStatusInfo(perc) {
+            if (perc >= configuracoes.metaMax) return { color: 'text-emerald-600', icon: 'chevrons-up', bg: 'bg-emerald-50 border-emerald-100' };
+            if (perc >= configuracoes.metaMin) return { color: 'text-blue-600', icon: 'chevron-up', bg: 'bg-blue-50 border-blue-100' };
+            return { color: 'text-rose-600', icon: 'chevron-down', bg: 'bg-rose-50 border-rose-100' };
         }
 
         function updateAll() {
             let tR = 0, tN = 0, tC = 0, growths = [];
+            
             dados.forEach((d, i) => {
                 tR += d.recebido; tN += d.novos; tC += d.cancelados;
+                
+                // Cálculo da Evolução Mês a Mês (Percentual do Faturamento)
                 if (i > 0) {
                     const antFat = dados[i-1].recebido;
                     const cell = document.getElementById(`status-${i}`);
                     if (antFat > 0 && d.recebido > 0) {
                         let perc = ((d.recebido - antFat) / antFat) * 100;
                         growths.push(perc);
-                        if (cell) cell.innerHTML = `<span class="${perc >= 1.5 ? 'text-emerald-400' : 'text-rose-400'} font-black text-xs">${perc.toFixed(2)}%</span>`;
+                        
+                        const status = getStatusInfo(perc);
+                        if (cell) {
+                            cell.innerHTML = `
+                                <div class="inline-flex items-center justify-center gap-1.5 ${status.color} ${status.bg} px-3 py-1 rounded-lg border">
+                                    <i data-lucide="${status.icon}" class="w-4 h-4"></i>
+                                    <span class="font-black text-sm tracking-tight">${perc.toFixed(2)}%</span>
+                                </div>
+                            `;
+                        }
+                    } else if (cell) {
+                        cell.innerHTML = '<span class="text-slate-400 text-sm font-semibold">-</span>';
                     }
                 }
             });
+            
+            lucide.createIcons(); // Recarrega os ícones gerados via JS nas setas
+
+            // Atualiza Cards Acumulados
             document.getElementById('kpi-faturamento').innerText = tR.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
             document.getElementById('kpi-ativacoes').innerText = tN.toLocaleString('pt-BR');
             document.getElementById('kpi-churn').innerText = tC.toLocaleString('pt-BR');
-            const avg = growths.length ? (growths.reduce((a,b) => a+b, 0) / growths.length).toFixed(2) : "0.00";
-            document.getElementById('kpi-crescimento').innerText = avg + "%";
+            
+            // Atualiza a Média de Crescimento Global
+            const valKpiGlobal = document.getElementById('kpi-crescimento');
+            const iconKpiGlobal = document.getElementById('status-icon-global');
+            const textKpiGlobal = document.getElementById('status-text-global');
+
+            if (growths.length > 0) {
+                const avg = growths.reduce((a,b) => a+b, 0) / growths.length;
+                const statusGlobal = getStatusInfo(avg);
+                
+                valKpiGlobal.innerText = avg.toFixed(2) + "%";
+                valKpiGlobal.className = `text-4xl lg:text-5xl font-black tracking-tighter transition-colors duration-300 ${statusGlobal.color}`;
+                iconKpiGlobal.innerHTML = `<i data-lucide="${statusGlobal.icon}" class="w-8 h-8 ${statusGlobal.color}"></i>`;
+                
+                if (avg >= configuracoes.metaMax) textKpiGlobal.innerHTML = 'Excepcional <span class="text-emerald-600">Acima da máxima</span>';
+                else if (avg >= configuracoes.metaMin) textKpiGlobal.innerHTML = 'Saudável <span class="text-blue-600">Dentro da meta</span>';
+                else textKpiGlobal.innerHTML = 'Atenção <span class="text-rose-600">Abaixo da mínima</span>';
+            } else {
+                valKpiGlobal.innerText = "0.00%";
+                valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-slate-300 transition-colors duration-300";
+                iconKpiGlobal.innerHTML = "";
+                textKpiGlobal.innerText = "Aguardando dados comparativos...";
+            }
+            lucide.createIcons();
+            
+            // Sincroniza dados novos com o Chart.js
             updateCharts(growths);
         }
 
-        let chartEvolucao, chartMeta;
+        // ==========================================
+        // 6. GRÁFICOS (CHART.JS)
+        // ==========================================
         function initCharts() {
-            const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 } } }, x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } } } };
-            chartEvolucao = new Chart(document.getElementById('chartEvolucao'), { type: 'line', data: { labels: meses, datasets: [{ label: 'Faturamento', data: [], borderColor: '#10b981', fill: true, backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.4 }] }, options: opt });
-            chartMeta = new Chart(document.getElementById('chartMeta'), { type: 'bar', data: { labels: meses.slice(1), datasets: [{ data: [], backgroundColor: [] }] }, options: opt });
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.font.weight = '600';
+
+            const tooltipStyle = {
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#1e293b',
+                bodyColor: '#475569',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                padding: 12,
+                boxPadding: 6,
+                usePointStyle: true,
+                titleFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' }
+            };
+
+            const ctxLine = document.getElementById('chartEvolucao').getContext('2d');
+            let gradientLine = ctxLine.createLinearGradient(0, 0, 0, 300);
+            gradientLine.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+            gradientLine.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            chartEvolucao = new Chart(ctxLine, { 
+                type: 'line', 
+                data: { 
+                    labels: meses.map(m => m.substring(0,3)), 
+                    datasets: [{ 
+                        label: 'Faturamento R$', 
+                        data: [], 
+                        borderColor: '#10b981', 
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#10b981',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true, 
+                        backgroundColor: gradientLine, 
+                        tension: 0.4 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    plugins: { legend: { display: false }, tooltip: tooltipStyle }, 
+                    scales: { 
+                        y: { grid: { color: 'rgba(0,0,0,0.03)' }, beginAtZero: true, border: { display: false } }, 
+                        x: { grid: { display: false }, border: { display: false } } 
+                    },
+                    interaction: { mode: 'index', intersect: false }
+                } 
+            });
+
+            const ctxBar = document.getElementById('chartMeta').getContext('2d');
+            chartMeta = new Chart(ctxBar, { 
+                type: 'bar', 
+                data: { 
+                    labels: meses.slice(1).map(m => m.substring(0,3)), 
+                    datasets: [{ 
+                        label: 'Crescimento %',
+                        data: [], 
+                        backgroundColor: [],
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }] 
+                }, 
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { 
+                            ...tooltipStyle,
+                            callbacks: { label: (ctx) => `Crescimento: ${ctx.raw.toFixed(2)}%` } 
+                        } 
+                    },
+                    scales: { 
+                        y: { grid: { color: 'rgba(0,0,0,0.03)' }, border: { display: false } },
+                        x: { grid: { display: false }, border: { display: false } }
+                    }
+                } 
+            });
         }
 
         function updateCharts(growths) {
             if (!chartEvolucao) return;
+            
+            // Popula os dados do gráfico de linha (Faturamento absoluto)
             chartEvolucao.data.datasets[0].data = dados.map(d => d.recebido);
             chartEvolucao.update();
+            
+            // Popula os dados e cores do gráfico de barras (Percentual de crescimento)
             chartMeta.data.datasets[0].data = growths;
-            chartMeta.data.datasets[0].backgroundColor = growths.map(g => g >= 1.5 ? '#10b981' : '#f43f5e');
+            chartMeta.data.datasets[0].backgroundColor = growths.map(g => {
+                if (g >= configuracoes.metaMax) return '#10b981'; // Verde
+                if (g >= configuracoes.metaMin) return '#3b82f6'; // Azul
+                return '#f43f5e'; // Vermelho
+            });
             chartMeta.update();
         }
 
-        window.onload = () => { if (localStorage.getItem('igp_auth') === 'true') { initCharts(); loadData(); } };
+        // ==========================================
+        // 7. INICIALIZAÇÃO
+        // ==========================================
+        window.onload = () => { 
+            if (localStorage.getItem('igp_auth') === 'true') { 
+                initCharts(); 
+                loadData(); 
+            } 
+        };
     </script>
 </body>
 </html>
