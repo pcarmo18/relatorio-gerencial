@@ -13,7 +13,7 @@
             background-color: #0f172a;
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
-            display: none; /* Escondido até validar o localStorage */
+            display: none; /* Proteção de acesso */
         }
 
         input::-webkit-outer-spin-button,
@@ -26,16 +26,6 @@
             background: #1e293b;
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        .table-container::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        .table-container::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 10px;
         }
 
         .input-field {
@@ -51,19 +41,7 @@
             outline: none;
         }
 
-        .select-year {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #10b981;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            outline: none;
-            cursor: pointer;
-        }
-
         .developer-tag {
-            font-family: 'Inter', sans-serif;
             letter-spacing: 0.15em;
             text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
         }
@@ -85,16 +63,6 @@
                     <p class="text-[10px] developer-tag font-bold text-emerald-500/80 uppercase">
                         Developed by <span class="text-emerald-400 text-sm italic ml-1 font-black">Patrick Carmo</span>
                     </p>
-                    <div class="flex items-center gap-2 mt-2">
-                        <p class="text-slate-500 text-xs font-medium">Projeções e Acompanhamento</p>
-                        <select id="year-selector" class="select-year text-xs ml-2">
-                            <option value="2026" selected>2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
-                        </select>
-                    </div>
                 </div>
             </div>
 
@@ -102,85 +70,51 @@
                 <button onclick="window.fazerLogout()" class="flex items-center gap-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 px-4 py-2 rounded-xl border border-slate-700 transition-all text-xs font-bold uppercase">
                     <i data-lucide="log-out" class="w-4 h-4"></i> Sair
                 </button>
-
                 <div id="save-indicator" class="opacity-0 text-[10px] uppercase font-bold text-emerald-500 flex items-center gap-2">
-                    <span>Sincronizado</span>
+                    <span>Sincronizado Cloud</span>
                     <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                </div>
-                
-                <div class="flex gap-3 bg-[#1e293b] p-1.5 rounded-2xl border border-slate-700 shadow-lg">
-                    <div class="px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-                        <i data-lucide="target" class="w-4 h-4"></i>
-                        Meta: 1,5% ao mês
-                    </div>
                 </div>
             </div>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="glass-card p-6 rounded-2xl border-emerald-500/20">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Faturamento Total</span>
-                    <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="dollar-sign" class="text-emerald-400 w-5 h-5"></i></div>
-                </div>
-                <span id="kpi-faturamento" class="text-2xl font-black text-slate-100 tracking-tight">R$ 0,00</span>
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest">Faturamento Total</span>
+                <span id="kpi-faturamento" class="text-3xl font-black text-slate-100 tracking-tight">R$ 0,00</span>
             </div>
-
             <div class="glass-card p-6 rounded-2xl border-blue-500/20">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Ativações no Ano</span>
-                    <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="plus-circle" class="text-blue-400 w-5 h-5"></i></div>
-                </div>
-                <span id="kpi-ativacoes" class="text-2xl font-black text-slate-100 tracking-tight">0</span>
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest text-blue-400">Ativações no Ano</span>
+                <span id="kpi-ativacoes" class="text-3xl font-black text-slate-100 tracking-tight">0</span>
             </div>
-
             <div class="glass-card p-6 rounded-2xl border-rose-500/20">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Cancelamentos</span>
-                    <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="trending-down" class="text-rose-400 w-5 h-5"></i></div>
-                </div>
-                <span id="kpi-churn" class="text-2xl font-black text-slate-100 tracking-tight">0</span>
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest text-rose-400">Cancelamentos</span>
+                <span id="kpi-churn" class="text-3xl font-black text-slate-100 tracking-tight">0</span>
             </div>
-
             <div class="glass-card p-6 rounded-2xl border-purple-500/20">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Crescimento Médio</span>
-                    <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="trending-up" class="text-purple-400 w-5 h-5"></i></div>
-                </div>
-                <span id="kpi-crescimento" class="text-2xl font-black text-slate-100 tracking-tight">0%</span>
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest text-purple-400">Cresc. Médio Fat.</span>
+                <span id="kpi-crescimento" class="text-3xl font-black text-slate-100 tracking-tight">0%</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div class="xl:col-span-2 glass-card rounded-2xl overflow-hidden">
-                <div class="p-6 border-b border-slate-700 bg-slate-800/20 flex items-center gap-2">
-                    <i data-lucide="file-text" class="text-slate-400 w-5 h-5"></i>
-                    <h2 class="text-lg font-semibold">Tabela de Lançamentos Mensais</h2>
-                </div>
-                <div class="overflow-x-auto table-container">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-800/50 text-slate-400 text-[10px] uppercase tracking-widest">
-                                <th class="p-4 border-b border-slate-700">Mês Referência</th>
-                                <th class="p-4 border-b border-slate-700 text-center">Receita (R$)</th>
-                                <th class="p-4 border-b border-slate-700 text-center">Base Ativa</th>
-                                <th class="p-4 border-b border-slate-700 text-center">Novos (+)</th>
-                                <th class="p-4 border-b border-slate-700 text-center">Cancelados (-)</th>
-                                <th class="p-4 border-b border-slate-700 text-center">Atingiu 1,5%?</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body" class="text-sm"></tbody>
-                    </table>
-                </div>
+            <div class="xl:col-span-2 glass-card rounded-2xl overflow-hidden p-4">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-slate-500 text-[10px] uppercase font-bold border-b border-slate-700">
+                            <th class="p-4">Mês</th>
+                            <th class="p-4 text-right">Faturamento (R$)</th>
+                            <th class="p-4 text-right">Base Ativa</th>
+                            <th class="p-4 text-right">Novos (+)</th>
+                            <th class="p-4 text-right">Cancelados (-)</th>
+                            <th class="p-4 text-center">Meta 1,5%</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="text-sm"></tbody>
+                </table>
             </div>
-
-            <div class="flex flex-col gap-6">
-                <div class="glass-card p-6 rounded-2xl h-64">
-                    <canvas id="chartEvolucao"></canvas>
-                </div>
-                <div class="glass-card p-6 rounded-2xl h-64">
-                    <canvas id="chartMeta"></canvas>
-                </div>
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-2xl h-64"><canvas id="chartEvolucao"></canvas></div>
+                <div class="glass-card p-6 rounded-2xl h-64"><canvas id="chartMeta"></canvas></div>
             </div>
         </div>
     </div>
@@ -196,10 +130,10 @@
             document.body.style.display = "block";
         }
 
-        window.fazerLogout = function() {
+        window.fazerLogout = () => {
             localStorage.removeItem('igp_auth');
             window.location.href = 'login.html';
-        }
+        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjh5UHLv-XHjVuMUeYYk9dLsQp1THEGhI",
@@ -207,8 +141,7 @@
             projectId: "dashboard-gerencial-igpfibra",
             storageBucket: "dashboard-gerencial-igpfibra.firebasestorage.app",
             messagingSenderId: "119051294297",
-            appId: "1:119051294297:web:ff8320861d3b7adcf94348",
-            measurementId: "G-R5SYK4YT23"
+            appId: "1:119051294297:web:ff8320861d3b7adcf94348"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -220,8 +153,7 @@
         let chartEvolucao, chartMeta;
 
         async function loadData() {
-            const docRef = doc(db, "gestao_igp", currentYear);
-            const docSnap = await getDoc(docRef);
+            const docSnap = await getDoc(doc(db, "gestao_igp", currentYear));
             if (docSnap.exists()) {
                 dados = docSnap.data().meses;
             } else {
@@ -234,30 +166,28 @@
         async function saveData() {
             const indicator = document.getElementById('save-indicator');
             try {
-                await setDoc(doc(db, "gestao_igp", currentYear), {
-                    meses: dados,
-                    lastUpdate: new Date()
-                });
+                await setDoc(doc(db, "gestao_igp", currentYear), { meses: dados });
                 indicator.style.opacity = "1";
                 setTimeout(() => indicator.style.opacity = "0", 1500);
             } catch (e) { console.error(e); }
         }
 
-        window.updateData = function(index, field, value) {
-            dados[index][field] = parseFloat(value) || 0;
+        window.updateData = (index, field, value) => {
+            // Remove pontos de milhar antes de converter para número real
+            const cleanValue = value.toString().replace(/\./g, '').replace(',', '.');
+            dados[index][field] = parseFloat(cleanValue) || 0;
             updateAll();
             saveData();
         };
 
         function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = dados.map((item, idx) => `
+            document.getElementById('table-body').innerHTML = dados.map((item, idx) => `
                 <tr class="border-b border-slate-700/30">
-                    <td class="p-4 font-semibold text-slate-300">${item.mes}</td>
-                    <td class="p-2"><input type="number" value="${item.recebido || ''}" oninput="window.updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right"></td>
-                    <td class="p-2"><input type="number" value="${item.ativos || ''}" oninput="window.updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right font-bold text-emerald-400"></td>
-                    <td class="p-2"><input type="number" value="${item.novos || ''}" oninput="window.updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-blue-400"></td>
-                    <td class="p-2"><input type="number" value="${item.cancelados || ''}" oninput="window.updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-rose-400"></td>
+                    <td class="p-4 font-bold text-slate-400">${item.mes}</td>
+                    <td class="p-2"><input type="text" value="${item.recebido.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg p-2 text-right font-bold text-emerald-400"></td>
+                    <td class="p-2"><input type="text" value="${item.ativos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg p-2 text-right"></td>
+                    <td class="p-2"><input type="text" value="${item.novos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg p-2 text-right text-blue-400"></td>
+                    <td class="p-2"><input type="text" value="${item.cancelados.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg p-2 text-right text-rose-400"></td>
                     <td class="p-4 text-center" id="status-${idx}">-</td>
                 </tr>
             `).join('');
@@ -265,23 +195,35 @@
         }
 
         function updateAll() {
-            let totalR = 0, totalA = 0, totalC = 0, growths = [];
-            dados.forEach((item, idx) => {
-                totalR += item.recebido; totalA += item.novos; totalC += item.cancelados;
-                if (idx > 0) {
-                    const ant = dados[idx-1].ativos;
-                    let perc = ant > 0 ? ((item.ativos - ant) / ant) * 100 : 0;
-                    growths.push(perc);
-                    const cell = document.getElementById(`status-${idx}`);
-                    if (cell) cell.innerHTML = `<span class="${perc >= 1.5 ? 'text-emerald-400' : 'text-rose-400'} font-black text-xs">${perc.toFixed(2)}%</span>`;
+            let tR = 0, tN = 0, tC = 0, growths = [];
+            dados.forEach((d, i) => {
+                tR += Number(d.recebido);
+                tN += Number(d.novos);
+                tC += Number(d.cancelados);
+                
+                if (i > 0) {
+                    const antFat = dados[i-1].recebido;
+                    const cell = document.getElementById(`status-${i}`);
+                    if (antFat > 0 && d.recebido > 0) {
+                        let perc = ((d.recebido - antFat) / antFat) * 100;
+                        growths.push(perc);
+                        if (cell) cell.innerHTML = `<span class="${perc >= 1.5 ? 'text-emerald-400' : 'text-rose-400'} font-black text-xs">${perc.toFixed(2)}%</span>`;
+                    }
                 }
             });
-            document.getElementById('kpi-faturamento').innerText = totalR.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('kpi-ativacoes').innerText = totalA;
-            document.getElementById('kpi-churn').innerText = totalC;
+
+            // Exibição corrigida do Faturamento Total com todos os zeros (ex: 1.460.000,00)
+            document.getElementById('kpi-faturamento').innerText = tR.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL',
+                minimumFractionDigits: 2 
+            });
+            
+            document.getElementById('kpi-ativacoes').innerText = tN.toLocaleString('pt-BR');
+            document.getElementById('kpi-churn').innerText = tC.toLocaleString('pt-BR');
             const avg = growths.length ? (growths.reduce((a,b) => a+b, 0) / growths.length).toFixed(2) : "0.00";
             document.getElementById('kpi-crescimento').innerText = avg + "%";
-            updateCharts();
+            updateCharts(growths);
         }
 
         function initCharts() {
@@ -290,27 +232,21 @@
             chartMeta = new Chart(document.getElementById('chartMeta'), { type: 'bar', data: { labels: meses.slice(1), datasets: [{ data: [], backgroundColor: [] }] }, options: opt });
         }
 
-        function updateCharts() {
+        function updateCharts(growths) {
             if (!chartEvolucao) return;
-            chartEvolucao.data.datasets[0].data = dados.map(d => d.ativos);
+            chartEvolucao.data.datasets[0].data = dados.map(d => d.recebido);
             chartEvolucao.update();
-            const c = [], b = [];
-            for(let i=1; i<dados.length; i++) {
-                const p = dados[i-1].ativos > 0 ? ((dados[i].ativos - dados[i-1].ativos) / dados[i-1].ativos) * 100 : 0;
-                c.push(p.toFixed(2)); b.push(p >= 1.5 ? '#10b981' : '#f43f5e');
-            }
-            chartMeta.data.datasets[0].data = c;
-            chartMeta.data.datasets[0].backgroundColor = b;
+            chartMeta.data.datasets[0].data = growths;
+            chartMeta.data.datasets[0].backgroundColor = growths.map(g => g >= 1.5 ? '#10b981' : '#f43f5e');
             chartMeta.update();
         }
 
-        function init() {
-            initCharts();
-            document.getElementById('year-selector').onchange = (e) => { currentYear = e.target.value; loadData(); };
-            loadData();
-        }
-
-        if (localStorage.getItem('igp_auth') === 'true') init();
+        window.onload = () => { 
+            if (localStorage.getItem('igp_auth') === 'true') { 
+                initCharts(); 
+                loadData(); 
+            } 
+        };
     </script>
 </body>
 </html>
