@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGP FIBRA | Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #0f172a; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .login-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #0f172a, #1e293b, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite; z-index: -1;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .glass-effect { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+    <div class="login-bg"></div>
+    
+    <div class="max-w-md w-full glass-effect p-10 rounded-[2.5rem] shadow-2xl relative z-10">
+        <div class="text-center mb-10">
+            <div class="inline-flex p-4 bg-emerald-500/10 rounded-2xl mb-4">
+                <i data-lucide="shield-check" class="text-emerald-400 w-10 h-10"></i>
+            </div>
+            <h2 class="text-3xl font-black text-white tracking-tighter">IGP FIBRA</h2>
+            <p class="text-slate-400 text-sm mt-2 uppercase tracking-widest font-semibold">Acesso Gerencial</p>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Usuário</label>
+                <input type="text" id="user" class="w-full bg-slate-900/80 border border-slate-700 px-6 py-4 rounded-2xl text-white outline-none focus:border-emerald-500 transition-all" placeholder="igp fibra">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Senha</label>
+                <input type="password" id="pass" class="w-full bg-slate-900/80 border border-slate-700 px-6 py-4 rounded-2xl text-white outline-none focus:border-emerald-500 transition-all" placeholder="••••••••">
+            </div>
+            
+            <button onclick="fazerLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+                Entrar no Painel
+                <i data-lucide="log-in" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function fazerLogin() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+
+            // Suas credenciais definidas
+            if(u === "igpfibra" && p === "08022008igp") {
+                // Criamos um token de sessão para o navegador lembrar que você logou
+                localStorage.setItem('igp_auth', 'true');
+                window.location.href = 'index.html'; // Redireciona para o principal
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+        }
+        lucide.createIcons();
+    </script>
+</body>
+</html>

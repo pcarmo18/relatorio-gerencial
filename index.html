@@ -4,22 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IGP FIBRA Gerencial</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        /* CSS CUSTOMIZADO */
         body {
             background-color: #0f172a;
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
+            display: none; /* Escondido até validar o localStorage */
         }
 
-        /* Esconder setas de input number */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -66,6 +62,12 @@
             cursor: pointer;
         }
 
+        .developer-tag {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
         #save-indicator {
             transition: opacity 0.3s ease;
         }
@@ -74,50 +76,49 @@
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <!-- HEADER -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
+                <h1 class="text-3xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tighter">
                     IGP FIBRA Gerencial
                 </h1>
-                <div class="flex items-center gap-2 mt-1">
-                    <p class="text-slate-400 text-sm">Projeções e Acompanhamento do Ano</p>
-                    <select id="year-selector" class="select-year text-sm ml-2">
-                        <option value="2026" selected>2026</option>
-                        <option value="2027">2027</option>
-                        <option value="2028">2028</option>
-                        <option value="2029">2029</option>
-                        <option value="2030">2030</option>
-                        <option value="2031">2031</option>
-                        <option value="2032">2032</option>
-                        <option value="2033">2033</option>
-                        <option value="2034">2034</option>
-                        <option value="2035">2035</option>
-                        <option value="2036">2036</option>
-                        <option value="2037">2037</option>
-                        <option value="2038">2038</option>
-                        <option value="2039">2039</option>
-                        <option value="2040">2040</option>
-                    </select>
+                <div class="flex flex-col mt-1">
+                    <p class="text-[10px] developer-tag font-bold text-emerald-500/80 uppercase">
+                        Developed by <span class="text-emerald-400 text-sm italic ml-1 font-black">Patrick Carmo</span>
+                    </p>
+                    <div class="flex items-center gap-2 mt-2">
+                        <p class="text-slate-500 text-xs font-medium">Projeções e Acompanhamento</p>
+                        <select id="year-selector" class="select-year text-xs ml-2">
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+
             <div class="flex items-center gap-4">
+                <button onclick="window.fazerLogout()" class="flex items-center gap-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 px-4 py-2 rounded-xl border border-slate-700 transition-all text-xs font-bold uppercase">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+                </button>
+
                 <div id="save-indicator" class="opacity-0 text-[10px] uppercase font-bold text-emerald-500 flex items-center gap-2">
-                    <span>Salvo</span>
+                    <span>Sincronizado</span>
                     <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                 </div>
+                
                 <div class="flex gap-3 bg-[#1e293b] p-1.5 rounded-2xl border border-slate-700 shadow-lg">
                     <div class="px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                         <i data-lucide="target" class="w-4 h-4"></i>
-                        Crescimento Alvo: 1,5% ao mês
+                        Meta: 1,5% ao mês
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- KPI CARDS -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="glass-card p-6 rounded-2xl border-emerald-500/20 group">
+            <div class="glass-card p-6 rounded-2xl border-emerald-500/20">
                 <div class="flex justify-between items-start mb-4">
                     <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Faturamento Total</span>
                     <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="dollar-sign" class="text-emerald-400 w-5 h-5"></i></div>
@@ -125,7 +126,7 @@
                 <span id="kpi-faturamento" class="text-2xl font-black text-slate-100 tracking-tight">R$ 0,00</span>
             </div>
 
-            <div class="glass-card p-6 rounded-2xl border-blue-500/20 group">
+            <div class="glass-card p-6 rounded-2xl border-blue-500/20">
                 <div class="flex justify-between items-start mb-4">
                     <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Ativações no Ano</span>
                     <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="plus-circle" class="text-blue-400 w-5 h-5"></i></div>
@@ -133,15 +134,15 @@
                 <span id="kpi-ativacoes" class="text-2xl font-black text-slate-100 tracking-tight">0</span>
             </div>
 
-            <div class="glass-card p-6 rounded-2xl border-rose-500/20 group">
+            <div class="glass-card p-6 rounded-2xl border-rose-500/20">
                 <div class="flex justify-between items-start mb-4">
-                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Total Cancelamentos</span>
+                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Cancelamentos</span>
                     <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="trending-down" class="text-rose-400 w-5 h-5"></i></div>
                 </div>
                 <span id="kpi-churn" class="text-2xl font-black text-slate-100 tracking-tight">0</span>
             </div>
 
-            <div class="glass-card p-6 rounded-2xl border-purple-500/20 group">
+            <div class="glass-card p-6 rounded-2xl border-purple-500/20">
                 <div class="flex justify-between items-start mb-4">
                     <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Crescimento Médio</span>
                     <div class="p-2.5 bg-slate-800/80 rounded-xl"><i data-lucide="trending-up" class="text-purple-400 w-5 h-5"></i></div>
@@ -151,7 +152,6 @@
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <!-- TABELA -->
             <div class="xl:col-span-2 glass-card rounded-2xl overflow-hidden">
                 <div class="p-6 border-b border-slate-700 bg-slate-800/20 flex items-center gap-2">
                     <i data-lucide="file-text" class="text-slate-400 w-5 h-5"></i>
@@ -169,217 +169,148 @@
                                 <th class="p-4 border-b border-slate-700 text-center">Atingiu 1,5%?</th>
                             </tr>
                         </thead>
-                        <tbody id="table-body" class="text-sm">
-                            <!-- JS vai preencher aqui -->
-                        </tbody>
+                        <tbody id="table-body" class="text-sm"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- GRÁFICOS -->
             <div class="flex flex-col gap-6">
-                <div class="glass-card p-6 rounded-2xl">
-                    <h3 class="text-slate-400 text-xs font-bold mb-6 flex items-center gap-2 uppercase tracking-widest">
-                        <i data-lucide="users" class="text-emerald-400 w-4 h-4"></i> Evolução da Base
-                    </h3>
-                    <div class="h-[200px]">
-                        <canvas id="chartEvolucao"></canvas>
-                    </div>
+                <div class="glass-card p-6 rounded-2xl h-64">
+                    <canvas id="chartEvolucao"></canvas>
                 </div>
-
-                <div class="glass-card p-6 rounded-2xl">
-                    <h3 class="text-slate-400 text-xs font-bold mb-6 flex items-center gap-2 uppercase tracking-widest">
-                        <i data-lucide="target" class="text-cyan-400 w-4 h-4"></i> Performance vs Meta
-                    </h3>
-                    <div class="h-[200px]">
-                        <canvas id="chartMeta"></canvas>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-br from-blue-600/10 to-indigo-600/10 border border-blue-500/20 p-5 rounded-2xl">
-                    <h4 class="font-bold flex items-center gap-2 mb-3 text-blue-400 text-sm uppercase">
-                        <i data-lucide="help-circle" class="w-4 h-4"></i> Diretriz Estratégica
-                    </h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        O alvo de <span class="text-emerald-400 font-bold">1,5% ao mês</span> é o patamar mínimo para garantir a sustentabilidade da operação.
-                    </p>
+                <div class="glass-card p-6 rounded-2xl h-64">
+                    <canvas id="chartMeta"></canvas>
                 </div>
             </div>
         </div>
-
-        <footer class="mt-12 text-center text-slate-600 text-[11px] border-t border-slate-800/50 pt-8 uppercase tracking-[0.3em]">
-            Painel de Gestão Estratégica • IGP FIBRA
-        </footer>
     </div>
 
-    <script>
-        /* JAVASCRIPT LÓGICA */
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // VERIFICAÇÃO DE SESSÃO
+        if (localStorage.getItem('igp_auth') !== 'true') {
+            window.location.href = 'login.html';
+        } else {
+            document.body.style.display = "block";
+        }
+
+        window.fazerLogout = function() {
+            localStorage.removeItem('igp_auth');
+            window.location.href = 'login.html';
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjh5UHLv-XHjVuMUeYYk9dLsQp1THEGhI",
+            authDomain: "dashboard-gerencial-igpfibra.firebaseapp.com",
+            projectId: "dashboard-gerencial-igpfibra",
+            storageBucket: "dashboard-gerencial-igpfibra.firebasestorage.app",
+            messagingSenderId: "119051294297",
+            appId: "1:119051294297:web:ff8320861d3b7adcf94348",
+            measurementId: "G-R5SYK4YT23"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        let dados = meses.map(mes => ({ mes, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
+        let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
         let currentYear = "2026";
         let chartEvolucao, chartMeta;
 
-        function init() {
-            lucide.createIcons();
-            initCharts();
-            
-            document.getElementById('year-selector').addEventListener('change', (e) => {
-                currentYear = e.target.value;
-                loadData();
-            });
-
-            loadData();
-        }
-
-        function loadData() {
-            const saved = localStorage.getItem(`igp_data_${currentYear}`);
-            if (saved) {
-                dados = JSON.parse(saved);
+        async function loadData() {
+            const docRef = doc(db, "gestao_igp", currentYear);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                dados = docSnap.data().meses;
             } else {
-                dados = meses.map(mes => ({ mes, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
+                dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
             }
             renderTable();
             updateAll();
         }
 
-        function saveData() {
-            localStorage.setItem(`igp_data_${currentYear}`, JSON.stringify(dados));
+        async function saveData() {
             const indicator = document.getElementById('save-indicator');
-            indicator.style.opacity = "1";
-            setTimeout(() => indicator.style.opacity = "0", 1500);
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = dados.map((item, idx) => `
-                <tr class="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
-                    <td class="p-4 font-semibold text-slate-300">${item.mes}</td>
-                    <td class="p-2"><input type="number" value="${item.recebido || ''}" oninput="updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right" placeholder="0.00"></td>
-                    <td class="p-2"><input type="number" value="${item.ativos || ''}" oninput="updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right font-bold" placeholder="0"></td>
-                    <td class="p-2"><input type="number" value="${item.novos || ''}" oninput="updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-blue-400" placeholder="0"></td>
-                    <td class="p-2"><input type="number" value="${item.cancelados || ''}" oninput="updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-rose-400" placeholder="0"></td>
-                    <td class="p-4 text-center" id="status-${idx}">
-                        ${idx === 0 ? '<span class="text-slate-500 text-[10px] font-bold uppercase">Mês Base</span>' : '-'}
-                    </td>
-                </tr>
-            `).join('');
+            try {
+                await setDoc(doc(db, "gestao_igp", currentYear), {
+                    meses: dados,
+                    lastUpdate: new Date()
+                });
+                indicator.style.opacity = "1";
+                setTimeout(() => indicator.style.opacity = "0", 1500);
+            } catch (e) { console.error(e); }
         }
 
         window.updateData = function(index, field, value) {
             dados[index][field] = parseFloat(value) || 0;
             updateAll();
             saveData();
-        }
+        };
 
-        function updateAll() {
-            let totalReceita = 0;
-            let totalAtivados = 0;
-            let totalChurn = 0;
-            let crescimentos = [];
-
-            dados.forEach((item, idx) => {
-                totalReceita += item.recebido;
-                totalAtivados += item.novos;
-                totalChurn += item.cancelados;
-
-                if (idx > 0) {
-                    const statusCell = document.getElementById(`status-${idx}`);
-                    const anteriorAtivos = dados[idx-1].ativos;
-                    let perc = 0;
-                    if(anteriorAtivos > 0) {
-                        perc = ((item.ativos - anteriorAtivos) / anteriorAtivos) * 100;
-                    }
-                    crescimentos.push(perc);
-                    
-                    const atingiu = perc >= 1.5;
-                    const colorClass = atingiu ? 'text-emerald-400' : 'text-rose-400';
-                    const icon = atingiu ? 'check-circle-2' : 'alert-circle';
-                    
-                    if (statusCell) {
-                        statusCell.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <span class="${colorClass} font-black text-xs">${perc.toFixed(2)}%</span>
-                                <i data-lucide="${icon}" class="${atingiu ? 'text-emerald-500' : 'text-rose-500'} w-3.5 h-3.5 mt-1"></i>
-                            </div>
-                        `;
-                    }
-                }
-            });
-
-            // Update KPIs
-            document.getElementById('kpi-faturamento').innerText = totalReceita.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('kpi-ativacoes').innerText = totalAtivados;
-            document.getElementById('kpi-churn').innerText = totalChurn;
-            const media = crescimentos.length ? (crescimentos.reduce((a,b) => a+b, 0) / crescimentos.length).toFixed(2) : "0.00";
-            document.getElementById('kpi-crescimento').innerText = media + "%";
-
-            updateCharts();
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = dados.map((item, idx) => `
+                <tr class="border-b border-slate-700/30">
+                    <td class="p-4 font-semibold text-slate-300">${item.mes}</td>
+                    <td class="p-2"><input type="number" value="${item.recebido || ''}" oninput="window.updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right"></td>
+                    <td class="p-2"><input type="number" value="${item.ativos || ''}" oninput="window.updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right font-bold text-emerald-400"></td>
+                    <td class="p-2"><input type="number" value="${item.novos || ''}" oninput="window.updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-blue-400"></td>
+                    <td class="p-2"><input type="number" value="${item.cancelados || ''}" oninput="window.updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg px-3 py-1.5 text-right text-rose-400"></td>
+                    <td class="p-4 text-center" id="status-${idx}">-</td>
+                </tr>
+            `).join('');
             lucide.createIcons();
         }
 
-        function initCharts() {
-            const chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { grid: { color: '#334155' }, ticks: { color: '#64748b', font: { size: 10 } } },
-                    x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
+        function updateAll() {
+            let totalR = 0, totalA = 0, totalC = 0, growths = [];
+            dados.forEach((item, idx) => {
+                totalR += item.recebido; totalA += item.novos; totalC += item.cancelados;
+                if (idx > 0) {
+                    const ant = dados[idx-1].ativos;
+                    let perc = ant > 0 ? ((item.ativos - ant) / ant) * 100 : 0;
+                    growths.push(perc);
+                    const cell = document.getElementById(`status-${idx}`);
+                    if (cell) cell.innerHTML = `<span class="${perc >= 1.5 ? 'text-emerald-400' : 'text-rose-400'} font-black text-xs">${perc.toFixed(2)}%</span>`;
                 }
-            };
-
-            const ctxEvolucao = document.getElementById('chartEvolucao').getContext('2d');
-            chartEvolucao = new Chart(ctxEvolucao, {
-                type: 'line',
-                data: {
-                    labels: meses,
-                    datasets: [{
-                        label: 'Base Ativa',
-                        data: Array(12).fill(0),
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 3
-                    }]
-                },
-                options: chartOptions
             });
+            document.getElementById('kpi-faturamento').innerText = totalR.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('kpi-ativacoes').innerText = totalA;
+            document.getElementById('kpi-churn').innerText = totalC;
+            const avg = growths.length ? (growths.reduce((a,b) => a+b, 0) / growths.length).toFixed(2) : "0.00";
+            document.getElementById('kpi-crescimento').innerText = avg + "%";
+            updateCharts();
+        }
 
-            const ctxMeta = document.getElementById('chartMeta').getContext('2d');
-            chartMeta = new Chart(ctxMeta, {
-                type: 'bar',
-                data: {
-                    labels: meses.slice(1),
-                    datasets: [{
-                        label: '% Crescimento',
-                        data: Array(11).fill(0),
-                        backgroundColor: [],
-                        borderRadius: 4
-                    }]
-                },
-                options: chartOptions
-            });
+        function initCharts() {
+            const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } };
+            chartEvolucao = new Chart(document.getElementById('chartEvolucao'), { type: 'line', data: { labels: meses, datasets: [{ data: [], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }] }, options: opt });
+            chartMeta = new Chart(document.getElementById('chartMeta'), { type: 'bar', data: { labels: meses.slice(1), datasets: [{ data: [], backgroundColor: [] }] }, options: opt });
         }
 
         function updateCharts() {
-            if (!chartEvolucao || !chartMeta) return;
-
+            if (!chartEvolucao) return;
             chartEvolucao.data.datasets[0].data = dados.map(d => d.ativos);
             chartEvolucao.update();
-
             const c = [], b = [];
             for(let i=1; i<dados.length; i++) {
-                const perc = dados[i-1].ativos > 0 ? ((dados[i].ativos - dados[i-1].ativos) / dados[i-1].ativos) * 100 : 0;
-                c.push(perc.toFixed(2));
-                b.push(perc >= 1.5 ? '#10b981' : '#f43f5e');
+                const p = dados[i-1].ativos > 0 ? ((dados[i].ativos - dados[i-1].ativos) / dados[i-1].ativos) * 100 : 0;
+                c.push(p.toFixed(2)); b.push(p >= 1.5 ? '#10b981' : '#f43f5e');
             }
             chartMeta.data.datasets[0].data = c;
             chartMeta.data.datasets[0].backgroundColor = b;
             chartMeta.update();
         }
 
-        window.onload = init;
+        function init() {
+            initCharts();
+            document.getElementById('year-selector').onchange = (e) => { currentYear = e.target.value; loadData(); };
+            loadData();
+        }
+
+        if (localStorage.getItem('igp_auth') === 'true') init();
     </script>
 </body>
 </html>
