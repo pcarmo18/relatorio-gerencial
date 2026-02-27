@@ -2,119 +2,86 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IGP FIBRA Gerencial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
     <style>
-        body {
-            background-color: #0f172a;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            display: none; /* Proteção de acesso */
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .glass-card {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        .input-field {
-            background: #0f172a;
-            border: 1px solid #334155;
-            transition: all 0.2s;
-            color: white;
-        }
-
-        .input-field:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 1px #10b981;
-            outline: none;
-        }
-
-        .developer-tag {
-            letter-spacing: 0.15em;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
-        }
-
-        #save-indicator {
-            transition: opacity 0.3s ease;
+        /* Restauração do Visual Antigo (Slate & Emerald) */
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; display: none; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
+        .input-field { background: #0f172a; border: 1px solid #334155; transition: all 0.2s; color: white; width: 100%; font-size: 16px; border-radius: 0.75rem; padding: 0.5rem 0.75rem; }
+        .input-field:focus { border-color: #10b981; outline: none; box-shadow: 0 0 0 1px #10b981; }
+        .developer-tag { letter-spacing: 0.15em; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        
+        /* Tabela Responsiva para Celular */
+        @media (max-width: 768px) {
+            .resp-table thead { display: none; }
+            .resp-table tr { display: flex; flex-direction: column; padding: 1.25rem; margin-bottom: 1.25rem; background: rgba(30, 41, 59, 0.5); border-radius: 1.25rem; border: 1px solid rgba(255, 255, 255, 0.05); }
+            .resp-table td { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border: none; }
+            .resp-table td::before { content: attr(data-label); font-weight: bold; color: #64748b; font-size: 0.75rem; text-transform: uppercase; }
+            .resp-table td:first-child { justify-content: center; font-size: 1.15rem; font-weight: 800; border-bottom: 1px solid #334155; margin-bottom: 0.5rem; color: #10b981; }
+            .resp-table td:first-child::before { display: none; }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-
+<body class="p-4 lg:p-8">
     <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 text-center md:text-left">
             <div>
-                <h1 class="text-3xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tighter">
-                    IGP FIBRA Gerencial
-                </h1>
-                <div class="flex flex-col mt-1">
-                    <p class="text-[10px] developer-tag font-bold text-emerald-500/80 uppercase">
-                        Developed by <span class="text-emerald-400 text-sm italic ml-1 font-black">Patrick Carmo</span>
-                    </p>
-                </div>
+                <h1 class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent tracking-tighter">IGP FIBRA Gerencial</h1>
+                <p class="text-[10px] developer-tag font-bold text-emerald-500/80 uppercase mt-1 italic">Developed by <span class="text-emerald-400 text-sm italic ml-1 font-black">Patrick Carmo</span></p>
             </div>
-
-            <div class="flex items-center gap-4">
-                <button onclick="window.fazerLogout()" class="flex items-center gap-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 px-4 py-2 rounded-xl border border-slate-700 transition-all text-xs font-bold uppercase">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Sair
-                </button>
+            <div class="flex flex-wrap justify-center items-center gap-4">
                 <div id="save-indicator" class="opacity-0 text-[10px] uppercase font-bold text-emerald-500 flex items-center gap-2">
                     <span>Sincronizado Cloud</span>
                     <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                 </div>
+                <button onclick="window.fazerLogout()" class="bg-slate-800 text-slate-400 px-6 py-2 rounded-xl border border-slate-700 text-xs font-bold uppercase hover:bg-rose-500/20 hover:text-rose-400 transition-all">Sair</button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="glass-card p-6 rounded-2xl border-emerald-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest">Faturamento Total</span>
-                <span id="kpi-faturamento" class="text-3xl font-black text-slate-100 tracking-tight">R$ 0,00</span>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="glass-card p-5 rounded-2xl border-emerald-500/20">
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest">Faturamento Total</span>
+                <span id="kpi-faturamento" class="text-xl lg:text-3xl font-black text-slate-100">R$ 0,00</span>
             </div>
-            <div class="glass-card p-6 rounded-2xl border-blue-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest text-blue-400">Ativações no Ano</span>
-                <span id="kpi-ativacoes" class="text-3xl font-black text-slate-100 tracking-tight">0</span>
+            <div class="glass-card p-5 rounded-2xl border-blue-500/20">
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest text-blue-400">Ativações</span>
+                <span id="kpi-ativacoes" class="text-xl lg:text-3xl font-black text-slate-100">0</span>
             </div>
-            <div class="glass-card p-6 rounded-2xl border-rose-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest text-rose-400">Cancelamentos</span>
-                <span id="kpi-churn" class="text-3xl font-black text-slate-100 tracking-tight">0</span>
+            <div class="glass-card p-5 rounded-2xl border-rose-500/20">
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest text-rose-400">Cancelados</span>
+                <span id="kpi-churn" class="text-xl lg:text-3xl font-black text-slate-100">0</span>
             </div>
-            <div class="glass-card p-6 rounded-2xl border-purple-500/20">
-                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-4 tracking-widest text-purple-400">Cresc. Médio Fat.</span>
-                <span id="kpi-crescimento" class="text-3xl font-black text-slate-100 tracking-tight">0%</span>
+            <div class="glass-card p-5 rounded-2xl border-purple-500/20">
+                <span class="text-slate-500 text-[10px] font-bold uppercase block mb-2 tracking-widest text-purple-400">Cresc. Fat.</span>
+                <span id="kpi-crescimento" class="text-xl lg:text-3xl font-black text-slate-100">0%</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div class="xl:col-span-2 glass-card rounded-2xl overflow-hidden p-4">
-                <table class="w-full text-left">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="xl:col-span-2 glass-card rounded-2xl p-2 lg:p-4">
+                <h2 class="p-4 font-bold text-slate-400 flex items-center gap-2 border-b border-slate-700/50 mb-4"><i data-lucide="layout-list" class="w-4 h-4"></i> Lançamentos</h2>
+                <table class="w-full resp-table">
                     <thead>
                         <tr class="text-slate-500 text-[10px] uppercase font-bold border-b border-slate-700">
                             <th class="p-4">Mês</th>
-                            <th class="p-4 text-right">Faturamento (R$)</th>
-                            <th class="p-4 text-right">Base Ativa</th>
-                            <th class="p-4 text-right">Novos (+)</th>
-                            <th class="p-4 text-right">Cancelados (-)</th>
-                            <th class="p-4 text-center">Meta 1,5%</th>
+                            <th class="p-4 text-right">Faturamento</th>
+                            <th class="p-4 text-right">Base</th>
+                            <th class="p-4 text-right">Novos</th>
+                            <th class="p-4 text-right">Cancelados</th>
+                            <th class="p-4 text-center">Meta Fat.</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body" class="text-sm"></tbody>
+                    <tbody id="table-body"></tbody>
                 </table>
             </div>
-            <div class="space-y-6">
-                <div class="glass-card p-6 rounded-2xl h-64"><canvas id="chartEvolucao"></canvas></div>
-                <div class="glass-card p-6 rounded-2xl h-64"><canvas id="chartMeta"></canvas></div>
+
+            <div class="flex flex-col gap-6">
+                <div class="glass-card p-4 rounded-2xl h-64"><canvas id="chartEvolucao"></canvas></div>
+                <div class="glass-card p-4 rounded-2xl h-64"><canvas id="chartMeta"></canvas></div>
             </div>
         </div>
     </div>
@@ -123,17 +90,11 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // VERIFICAÇÃO DE SESSÃO
-        if (localStorage.getItem('igp_auth') !== 'true') {
-            window.location.href = 'login.html';
-        } else {
-            document.body.style.display = "block";
-        }
+        // Seguranca
+        if (localStorage.getItem('igp_auth') !== 'true') window.location.href = 'login.html';
+        else document.body.style.display = "block";
 
-        window.fazerLogout = () => {
-            localStorage.removeItem('igp_auth');
-            window.location.href = 'login.html';
-        };
+        window.fazerLogout = () => { localStorage.removeItem('igp_auth'); window.location.href = 'login.html'; };
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjh5UHLv-XHjVuMUeYYk9dLsQp1THEGhI",
@@ -146,36 +107,26 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
-        let currentYear = "2026";
-        let chartEvolucao, chartMeta;
 
         async function loadData() {
-            const docSnap = await getDoc(doc(db, "gestao_igp", currentYear));
-            if (docSnap.exists()) {
-                dados = docSnap.data().meses;
-            } else {
-                dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
-            }
+            const docSnap = await getDoc(doc(db, "gestao_igp", "2026"));
+            if (docSnap.exists()) dados = docSnap.data().meses;
             renderTable();
             updateAll();
         }
 
         async function saveData() {
             const indicator = document.getElementById('save-indicator');
-            try {
-                await setDoc(doc(db, "gestao_igp", currentYear), { meses: dados });
-                indicator.style.opacity = "1";
-                setTimeout(() => indicator.style.opacity = "0", 1500);
-            } catch (e) { console.error(e); }
+            await setDoc(doc(db, "gestao_igp", "2026"), { meses: dados });
+            indicator.style.opacity = "1";
+            setTimeout(() => indicator.style.opacity = "0", 1500);
         }
 
         window.updateData = (index, field, value) => {
-            // Remove pontos de milhar antes de converter para número real
-            const cleanValue = value.toString().replace(/\./g, '').replace(',', '.');
-            dados[index][field] = parseFloat(cleanValue) || 0;
+            const numericValue = value.replace(/\D/g, '');
+            dados[index][field] = parseInt(numericValue) || 0;
             updateAll();
             saveData();
         };
@@ -183,12 +134,12 @@
         function renderTable() {
             document.getElementById('table-body').innerHTML = dados.map((item, idx) => `
                 <tr class="border-b border-slate-700/30">
-                    <td class="p-4 font-bold text-slate-400">${item.mes}</td>
-                    <td class="p-2"><input type="text" value="${item.recebido.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'recebido', this.value)" class="input-field w-full rounded-lg p-2 text-right font-bold text-emerald-400"></td>
-                    <td class="p-2"><input type="text" value="${item.ativos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'ativos', this.value)" class="input-field w-full rounded-lg p-2 text-right"></td>
-                    <td class="p-2"><input type="text" value="${item.novos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'novos', this.value)" class="input-field w-full rounded-lg p-2 text-right text-blue-400"></td>
-                    <td class="p-2"><input type="text" value="${item.cancelados.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'cancelados', this.value)" class="input-field w-full rounded-lg p-2 text-right text-rose-400"></td>
-                    <td class="p-4 text-center" id="status-${idx}">-</td>
+                    <td class="p-2 font-bold text-emerald-400">${item.mes}</td>
+                    <td data-label="Faturamento" class="p-2"><input type="text" value="${item.recebido.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'recebido', this.value)" class="input-field text-right font-bold text-white"></td>
+                    <td data-label="Base Ativa" class="p-2"><input type="text" value="${item.ativos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'ativos', this.value)" class="input-field text-right"></td>
+                    <td data-label="Novos" class="p-2"><input type="text" value="${item.novos.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'novos', this.value)" class="input-field text-right text-blue-400"></td>
+                    <td data-label="Cancels" class="p-2"><input type="text" value="${item.cancelados.toLocaleString('pt-BR')}" onchange="window.updateData(${idx}, 'cancelados', this.value)" class="input-field text-right text-rose-400"></td>
+                    <td data-label="Meta Fat." class="p-2 text-center font-black" id="status-${idx}">-</td>
                 </tr>
             `).join('');
             lucide.createIcons();
@@ -197,10 +148,7 @@
         function updateAll() {
             let tR = 0, tN = 0, tC = 0, growths = [];
             dados.forEach((d, i) => {
-                tR += Number(d.recebido);
-                tN += Number(d.novos);
-                tC += Number(d.cancelados);
-                
+                tR += d.recebido; tN += d.novos; tC += d.cancelados;
                 if (i > 0) {
                     const antFat = dados[i-1].recebido;
                     const cell = document.getElementById(`status-${i}`);
@@ -211,14 +159,7 @@
                     }
                 }
             });
-
-            // Exibição corrigida do Faturamento Total com todos os zeros (ex: 1.460.000,00)
-            document.getElementById('kpi-faturamento').innerText = tR.toLocaleString('pt-BR', { 
-                style: 'currency', 
-                currency: 'BRL',
-                minimumFractionDigits: 2 
-            });
-            
+            document.getElementById('kpi-faturamento').innerText = tR.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
             document.getElementById('kpi-ativacoes').innerText = tN.toLocaleString('pt-BR');
             document.getElementById('kpi-churn').innerText = tC.toLocaleString('pt-BR');
             const avg = growths.length ? (growths.reduce((a,b) => a+b, 0) / growths.length).toFixed(2) : "0.00";
@@ -226,9 +167,10 @@
             updateCharts(growths);
         }
 
+        let chartEvolucao, chartMeta;
         function initCharts() {
-            const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } };
-            chartEvolucao = new Chart(document.getElementById('chartEvolucao'), { type: 'line', data: { labels: meses, datasets: [{ data: [], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }] }, options: opt });
+            const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 } } }, x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } } } };
+            chartEvolucao = new Chart(document.getElementById('chartEvolucao'), { type: 'line', data: { labels: meses, datasets: [{ label: 'Faturamento', data: [], borderColor: '#10b981', fill: true, backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.4 }] }, options: opt });
             chartMeta = new Chart(document.getElementById('chartMeta'), { type: 'bar', data: { labels: meses.slice(1), datasets: [{ data: [], backgroundColor: [] }] }, options: opt });
         }
 
@@ -241,12 +183,7 @@
             chartMeta.update();
         }
 
-        window.onload = () => { 
-            if (localStorage.getItem('igp_auth') === 'true') { 
-                initCharts(); 
-                loadData(); 
-            } 
-        };
+        window.onload = () => { if (localStorage.getItem('igp_auth') === 'true') { initCharts(); loadData(); } };
     </script>
 </body>
 </html>
