@@ -173,10 +173,15 @@
                 <span class="text-rose-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Cancelados Acum. <i data-lucide="trending-down" class="w-3.5 h-3.5"></i></span>
                 <span id="kpi-canc-acum" class="text-2xl font-black text-rose-900 tracking-tight">0</span>
             </div>
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 bg-slate-800 border-slate-700 text-white">
-                <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="pie-chart" class="w-24 h-24"></i></div>
-                <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Média Churn Mensal <i data-lucide="percent" class="w-3.5 h-3.5 text-blue-400"></i></span>
-                <span id="kpi-churn" class="text-2xl font-black text-white tracking-tight" title="Média de cancelamentos por mês em relação à base ativa">0%</span>
+            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 bg-slate-800 border-slate-700 text-white flex flex-col justify-center">
+                <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="award" class="w-24 h-24"></i></div>
+                <div class="flex justify-between items-end mb-2">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5" title="Progresso em direção à meta total dos 12 meses do ano">Meta do Ano <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-400"></i></span>
+                    <span id="kpi-progresso-text" class="text-lg font-black text-white tracking-tight">0%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5 mt-1 overflow-hidden border border-slate-600">
+                    <div id="kpi-progresso-bar" class="bg-gradient-to-r from-blue-500 to-emerald-400 h-2.5 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+                </div>
             </div>
         </div>
 
@@ -269,9 +274,9 @@
 
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                        <i data-lucide="users" class="w-4 h-4 text-purple-500"></i> Média Churn Mensal
+                        <i data-lucide="award" class="w-4 h-4 text-purple-500"></i> Progresso da Meta do Ano
                     </h3>
-                    <p class="leading-relaxed">Calcula, em média, qual porcentagem da sua base de clientes cancela o serviço a cada mês em que houve registro. O ideal para provedores saudáveis é manter essa média abaixo de 2% ao mês.</p>
+                    <p class="leading-relaxed">A barra de progresso no topo compara todo o faturamento real que a empresa já colocou no caixa este ano contra a <strong>soma de todas as 12 metas do ano</strong>. É o "loading" que mostra se a empresa está chegando no objetivo final.</p>
                 </div>
             </div>
             
@@ -399,11 +404,9 @@
             let ultimaBaseAtiva = 0;
             let somaNovos = 0;
             let somaCanc = 0;
-            
-            let somaChurnMensal = 0;
-            let mesesComDadosClientes = 0;
 
             let ativosAnterior = 0;
+            let metaTotalDoAno = 0; // Para a barra de progresso
 
             let labelsChart = [];
             let faturamentoChart = [];
@@ -415,12 +418,16 @@
             let novosChart = [];
             let cancChart = [];
 
+            // Calcula primeiro a meta total dos 12 meses
+            for(let j = 0; j < 12; j++) {
+                metaTotalDoAno += base * Math.pow(1 + percentual, j);
+            }
+
             dados.forEach((d, i) => {
                 let metaPadraoMes = base * Math.pow(1 + percentual, i);
                 let dividaPassada = saldoGlobalAno < 0 ? Math.abs(saldoGlobalAno) : 0;
                 let metaAjustada = metaPadraoMes + dividaPassada;
                 
-                // --- MUDANÇA DA META AQUI ---
                 let stringMeta = `<div class="font-black text-slate-800 tracking-tight text-[15px]">R$ ${formatBRL(metaPadraoMes)}</div>`;
                 if(dividaPassada > 0) {
                     stringMeta += `<div class="text-[10px] text-rose-500 font-bold mt-1 flex justify-end items-center gap-1" title="Déficit que precisa ser recuperado para o ano ficar azul">
@@ -429,7 +436,6 @@
                 } else {
                     stringMeta += `<div class="text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-wider">Meta Base</div>`;
                 }
-                // -----------------------------
 
                 let stringDeficit = `<span class="text-slate-400 font-medium text-xs">-</span>`;
                 let stringPct = `<span class="text-slate-400 font-medium text-xs">-</span>`;
@@ -472,15 +478,7 @@
 
                     if(ativos > 0) {
                         ultimaBaseAtiva = ativos;
-                        mesesComDadosClientes++;
                         
-                        let churnMes = 0;
-                        if(ativosAnterior > 0) {
-                             // Calcula o churn do mês em relação à base do mês anterior
-                             churnMes = (canc / ativosAnterior) * 100;
-                             somaChurnMensal += churnMes;
-                        }
-
                         if(ativosAnterior === 0) {
                             stringCrescCli = `<span class="text-slate-400 font-medium text-[10px] uppercase">Ref. Inicial</span>`;
                         } else {
@@ -528,12 +526,13 @@
             document.getElementById('kpi-novos-acum').innerText = somaNovos.toLocaleString('pt-BR');
             document.getElementById('kpi-canc-acum').innerText = somaCanc.toLocaleString('pt-BR');
             
-            // Churn Médio Mensal (exclui o primeiro mês da média pois não há mês anterior para comparar)
-            let churnMedio = 0;
-            if(mesesComDadosClientes > 1) {
-                churnMedio = somaChurnMensal / (mesesComDadosClientes - 1);
+            // Atualiza a Barra de Progresso Anual
+            let percentualAno = 0;
+            if (metaTotalDoAno > 0) {
+                percentualAno = (totalFaturamento / metaTotalDoAno) * 100;
             }
-            document.getElementById('kpi-churn').innerText = churnMedio.toFixed(2) + "%";
+            document.getElementById('kpi-progresso-text').innerText = percentualAno.toFixed(1) + "%";
+            document.getElementById('kpi-progresso-bar').style.width = (percentualAno > 100 ? 100 : percentualAno) + "%";
 
             const valKpiGlobal = document.getElementById('kpi-saldo-global');
             const subKpiGlobal = document.getElementById('kpi-saldo-sub');
