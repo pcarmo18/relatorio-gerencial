@@ -208,7 +208,7 @@
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -257,21 +257,18 @@
             </div>
             
             <div class="p-6 overflow-y-auto flex-1 space-y-6 text-slate-600 text-sm">
-                
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
                         <i data-lucide="refresh-cw" class="w-4 h-4 text-blue-500"></i> Meta e Recuperação
                     </h3>
                     <p class="leading-relaxed">A <strong>Meta do Mês</strong> exibe o valor padrão estipulado pela sua taxa de crescimento. Se no mês anterior houve um déficit no caixa, o painel mostrará logo abaixo da meta o valor adicional que você precisa faturar <strong>(Recuperar)</strong> para que a empresa volte a bater o lucro ideal do ano.</p>
                 </div>
-
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
                         <i data-lucide="dollar-sign" class="w-4 h-4 text-emerald-500"></i> Cresc. Efetivo (Mês)
                     </h3>
                     <p class="leading-relaxed">Mostra o seu crescimento financeiro real isolado naquele mês, sem carregar dívidas anteriores. É calculado aplicando a porcentagem da meta que você atingiu sobre a taxa alvo. Se a meta de crescimento do mês é 1,5%, e você faturou 100% da meta padrão do mês, seu crescimento efetivo foi de 1,5%.</p>
                 </div>
-
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
                         <i data-lucide="award" class="w-4 h-4 text-purple-500"></i> Progresso da Meta do Ano
@@ -283,6 +280,34 @@
             <div class="p-5 border-t border-slate-100 bg-slate-50 text-right rounded-b-3xl">
                 <button onclick="window.toggleHelp(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
                     Entendi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="daily-modal" class="fixed inset-0 z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="daily-content">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2" id="daily-modal-title">
+                        <i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> Lançamento Diário
+                    </h2>
+                    <p class="text-xs text-slate-500 font-medium mt-1 uppercase tracking-widest">Total do Mês: <span id="daily-modal-total" class="font-black text-blue-700 text-sm ml-1">R$ 0,00</span></p>
+                </div>
+                <button onclick="window.closeDailyModal()" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-50/50">
+                <div id="daily-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    </div>
+            </div>
+            
+            <div class="p-5 border-t border-slate-100 bg-white flex justify-between items-center rounded-b-3xl">
+                <span class="text-xs text-slate-400 font-bold flex items-center gap-1"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvo automaticamente ao digitar</span>
+                <button onclick="window.closeDailyModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
+                    Concluído
                 </button>
             </div>
         </div>
@@ -310,7 +335,10 @@
         const db = getFirestore(app);
         
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0 }));
+        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // Dias por mês (ano não bissexto base)
+        
+        // Estrutura atualizada incluindo o array 'dias'
+        let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0, dias: Array(31).fill(0) }));
         
         let configuracoes = { metaInicial: 737000, metaPerc: 1.5 };
         let saveTimeout;
@@ -320,7 +348,7 @@
         const formatNum = (value) => new Intl.NumberFormat('pt-BR').format(value);
         const parseCurrency = (str) => {
             if (!str) return 0;
-            const numeric = str.replace(/[^\d,-]/g, '').replace(',', '.');
+            const numeric = str.toString().replace(/[^\d,-]/g, '').replace(',', '.');
             return parseFloat(numeric) || 0;
         };
 
@@ -336,18 +364,84 @@
             }
         };
 
+        // Funções do Modal Diário
+        window.openDailyModal = (monthIndex) => {
+            const mesNome = dados[monthIndex].mes;
+            document.getElementById('daily-modal-title').innerHTML = `<i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> Lançamento Diário - ${mesNome}`;
+            document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(dados[monthIndex].recebido);
+            
+            let htmlDias = '';
+            const qtdDias = daysInMonth[monthIndex];
+            
+            for(let d = 0; d < qtdDias; d++) {
+                let val = dados[monthIndex].dias[d] || 0;
+                htmlDias += `
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors group">
+                        <label class="text-[10px] text-slate-400 group-hover:text-blue-600 transition-colors font-bold uppercase tracking-wider mb-1 block">Dia ${String(d + 1).padStart(2, '0')}</label>
+                        <div class="relative">
+                            <span class="absolute left-2 top-1.5 text-slate-400 font-bold text-xs">R$</span>
+                            <input type="text" value="${val > 0 ? formatBRL(val) : ''}" placeholder="0,00" 
+                                onchange="window.handleDailyInput(this, ${monthIndex}, ${d})" 
+                                class="w-full bg-slate-50 border border-transparent focus:border-blue-400 focus:bg-white rounded-lg py-1 pl-7 pr-2 text-right text-blue-900 font-black text-sm transition-all outline-none">
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('daily-grid').innerHTML = htmlDias;
+            lucide.createIcons();
+            
+            const modal = document.getElementById('daily-modal');
+            const content = document.getElementById('daily-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+        };
+
+        window.closeDailyModal = () => {
+            const modal = document.getElementById('daily-modal');
+            const content = document.getElementById('daily-content');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        };
+
+        window.handleDailyInput = (element, monthIndex, dayIndex) => {
+            let val = parseCurrency(element.value);
+            element.value = val > 0 ? formatBRL(val) : '';
+            
+            dados[monthIndex].dias[dayIndex] = val;
+            
+            // Recalcula o total do mês e atualiza interface
+            let totalMes = dados[monthIndex].dias.reduce((acc, curr) => acc + curr, 0);
+            dados[monthIndex].recebido = totalMes;
+            document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(totalMes);
+            
+            updateAll();
+            triggerSave();
+        };
+
         async function loadData() {
             const docSnap = await getDoc(doc(db, "gestao_igp", "2026"));
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 if (data.meses) {
-                    dados = data.meses.map((m, i) => ({
-                        mes: m.mes,
-                        recebido: m.recebido || 0,
-                        ativos: m.ativos || 0,
-                        novos: m.novos || 0,
-                        cancelados: m.cancelados || 0
-                    }));
+                    dados = data.meses.map((m, i) => {
+                        let defaultDias = Array(31).fill(0);
+                        
+                        // Sistema de Migração: Se tem valor recebido antigo, mas não tem array de dias salvo, joga pro Dia 1.
+                        if (m.recebido > 0 && (!m.dias || m.dias.reduce((a,b)=>a+b,0) === 0)) {
+                            defaultDias[0] = m.recebido;
+                        } else if (m.dias) {
+                            defaultDias = m.dias;
+                        }
+
+                        return {
+                            mes: m.mes,
+                            recebido: m.recebido || 0,
+                            ativos: m.ativos || 0,
+                            novos: m.novos || 0,
+                            cancelados: m.cancelados || 0,
+                            dias: defaultDias
+                        };
+                    });
                 }
                 if (data.configuracoes) {
                     configuracoes.metaInicial = data.configuracoes.metaInicial || 737000;
@@ -406,7 +500,7 @@
             let somaCanc = 0;
 
             let ativosAnterior = 0;
-            let metaTotalDoAno = 0; // Para a barra de progresso
+            let metaTotalDoAno = 0; 
 
             let labelsChart = [];
             let faturamentoChart = [];
@@ -418,7 +512,6 @@
             let novosChart = [];
             let cancChart = [];
 
-            // Calcula primeiro a meta total dos 12 meses
             for(let j = 0; j < 12; j++) {
                 metaTotalDoAno += base * Math.pow(1 + percentual, j);
             }
@@ -456,7 +549,6 @@
                     
                     saldoGlobalAno += saldoMes; 
 
-                    // Crescimento Efetivo Mensal Isolado
                     let crescEfetivoMensal = configuracoes.metaPerc * (pctAtingida / 100);
 
                     if (saldoMes < 0) {
@@ -504,7 +596,16 @@
                 htmlTabela += `
                     <tr class="hover:bg-slate-50/80 transition-colors group border-b border-slate-100 last:border-0">
                         <td class="p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors text-sm">${d.mes}</td>
-                        <td data-label="Valor Recebido" class="p-2 w-40"><input type="text" value="${recebido > 0 ? formatBRL(recebido) : ''}" placeholder="0,00" onchange="window.handleInput(this, ${i}, 'recebido', true)" class="input-field text-right font-black text-blue-900 tracking-wide bg-blue-50/30 text-sm"></td>
+                        <td data-label="Valor Recebido" class="p-2 w-44">
+                            <div class="flex items-center gap-2 justify-end">
+                                <div class="flex-1 bg-white border ${recebido > 0 ? 'border-blue-200 bg-blue-50/20 text-blue-900' : 'border-slate-200 text-slate-400'} rounded-lg px-3 py-1.5 text-right font-black text-sm truncate cursor-default" title="Total: R$ ${formatBRL(recebido)}">
+                                    ${recebido > 0 ? formatBRL(recebido) : '0,00'}
+                                </div>
+                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-1.5 rounded-lg transition-all shadow-sm group-hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" title="Lançar valores por dia">
+                                    <i data-lucide="calendar-plus" class="w-4 h-4 hover:scale-110 transition-transform"></i>
+                                </button>
+                            </div>
+                        </td>
                         <td data-label="Meta do Mês" class="p-2 text-right bg-slate-50/50">${stringMeta}</td>
                         <td data-label="Desempenho" class="p-2 text-right">${stringDeficit}</td>
                         <td data-label="Base Ativa" class="p-2 w-20"><input type="text" value="${ativos > 0 ? formatNum(ativos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'ativos', false)" class="input-field text-right text-slate-700 font-bold text-sm"></td>
@@ -526,7 +627,6 @@
             document.getElementById('kpi-novos-acum').innerText = somaNovos.toLocaleString('pt-BR');
             document.getElementById('kpi-canc-acum').innerText = somaCanc.toLocaleString('pt-BR');
             
-            // Atualiza a Barra de Progresso Anual
             let percentualAno = 0;
             if (metaTotalDoAno > 0) {
                 percentualAno = (totalFaturamento / metaTotalDoAno) * 100;
