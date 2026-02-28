@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IGP FIBRA | Login</title>
+    <title>IGP FIBRA Gerencial | Login</title>
+    
+    <link rel="icon" type="image/png" href="logo igp.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -86,21 +89,17 @@
             const u = document.getElementById('user').value.trim();
             const p = document.getElementById('pass').value.trim();
 
-            // Suas credenciais definidas
             if(u === "igpfibra" && p === "08022008igp") {
-                // Criamos um token de sessão para o navegador lembrar que você logou
                 localStorage.setItem('igp_auth', 'true');
                 
-                // Efeito visual no botão antes de redirecionar
                 const btn = document.querySelector('button');
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Autenticando...';
                 lucide.createIcons();
                 
                 setTimeout(() => {
-                    window.location.href = 'index.html'; // Redireciona para o principal
+                    window.location.href = 'index.html';
                 }, 800);
             } else {
-                // Animação de erro no botão
                 const btn = document.querySelector('button');
                 const originalText = btn.innerHTML;
                 
@@ -120,7 +119,6 @@
             }
         }
         
-        // Permite logar apertando "Enter"
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 fazerLogin();
