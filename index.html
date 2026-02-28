@@ -71,7 +71,6 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Ajustes específicos para Mobile na Tabela */
         @media (max-width: 768px) {
             .resp-table thead { display: none; }
             .resp-table tr { 
@@ -95,7 +94,6 @@
             }
             .resp-table td:first-child::before { display: none; }
             
-            /* Ajustes para inputs não quebrarem layout no mobile */
             .resp-table input { text-align: right; max-width: 150px; }
             .mobile-input-container { flex-grow: 1; display: flex; justify-content: flex-end; }
         }
@@ -114,9 +112,23 @@
             </div>
             
             <div class="flex items-center gap-2 md:gap-3 flex-wrap justify-center w-full md:w-auto">
-                <div id="save-indicator" class="opacity-0 transition-opacity duration-300 text-[10px] md:text-xs font-bold text-blue-600 flex items-center gap-1.5 bg-blue-50 px-2 md:px-3 py-1.5 rounded-full border border-blue-100">
-                    <i data-lucide="cloud-check" class="w-3.5 h-3.5 md:w-4 md:h-4"></i>
-                    <span>Salvo</span>
+                <div class="relative group">
+                    <select id="ano-selector" onchange="window.mudarAno(this.value)" class="appearance-none bg-white border border-slate-200 text-blue-700 py-2 md:py-2.5 pl-4 pr-9 rounded-xl font-black text-xs md:text-sm shadow-sm hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer outline-none">
+                        <option value="2026">Ano 2026</option>
+                        <option value="2027">Ano 2027</option>
+                        <option value="2028">Ano 2028</option>
+                        <option value="2029">Ano 2029</option>
+                        <option value="2030">Ano 2030</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-blue-500 absolute right-3 top-2.5 md:top-3 pointer-events-none group-hover:translate-y-0.5 transition-transform"></i>
+                </div>
+
+                <div id="save-indicator" class="transition-all duration-300 text-[10px] md:text-xs font-bold text-emerald-600 flex items-center gap-1.5 bg-emerald-50 px-3 py-2 md:py-2.5 rounded-xl border border-emerald-100 shadow-sm hidden md:flex">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span id="save-text">Ao Vivo</span>
                 </div>
                 
                 <button onclick="window.toggleHelp(true)" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-sky-200 text-xs md:text-sm font-bold transition-all shadow-sm">
@@ -204,17 +216,17 @@
         <div class="glass-card rounded-xl md:rounded-2xl overflow-hidden flex flex-col shadow-sm pb-2 md:pb-4">
             <div class="p-4 md:p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center">
                 <h2 class="font-bold text-slate-700 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider">
-                    <i data-lucide="table" class="w-4 h-4 text-blue-600"></i> Histórico Mensal & Saúde
+                    <i data-lucide="table" class="w-4 h-4 text-blue-600"></i> Histórico Mensal & Saúde (<span id="table-year-title">2026</span>)
                 </h2>
             </div>
             <div class="p-2 md:p-4 overflow-x-auto">
                 <table class="w-full resp-table whitespace-nowrap">
                     <thead>
                         <tr class="text-slate-500 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
-                            <th class="p-3 text-left">Mês</th>
+                            <th class="p-3 text-left">Mês Base</th>
                             <th class="p-3 text-right">Valor Recebido (R$)</th>
-                            <th class="p-3 text-right">Meta do Mês</th>
-                            <th class="p-3 text-right">Desempenho (Mês)</th>
+                            <th class="p-3 text-right">Meta do Período</th>
+                            <th class="p-3 text-right">Desempenho</th>
                             <th class="p-3 text-right">Base Ativa</th>
                             <th class="p-3 text-right">Novos</th>
                             <th class="p-3 text-right">Canc.</th>
@@ -271,28 +283,20 @@
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            
             <div class="p-5 md:p-6 overflow-y-auto flex-1 space-y-5 md:space-y-6 text-slate-600 text-xs md:text-sm">
                 <div class="space-y-2 md:space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="refresh-cw" class="w-4 h-4 text-blue-500"></i> Meta e Recuperação
+                        <i data-lucide="calendar" class="w-4 h-4 text-orange-500"></i> Fechamento Personalizado
                     </h3>
-                    <p class="leading-relaxed">A <strong>Meta do Mês</strong> exibe o valor padrão estipulado pela sua taxa de crescimento. Se no mês anterior houve um déficit no caixa, o painel mostrará logo abaixo da meta o valor adicional que você precisa faturar <strong>(Recuperar)</strong> para que a empresa volte a bater o lucro ideal do ano.</p>
+                    <p class="leading-relaxed">O sistema gera os dias de forma exata. O mês é baseado do dia 26 do mês anterior até o dia 25 do atual.</p>
                 </div>
                 <div class="space-y-2 md:space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="dollar-sign" class="w-4 h-4 text-emerald-500"></i> Cresc. Efetivo (Mês)
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Análise de Metas em 5 Fases
                     </h3>
-                    <p class="leading-relaxed">Mostra o seu crescimento financeiro real isolado naquele mês, sem carregar dívidas anteriores. É calculado aplicando a porcentagem da meta que você atingiu sobre a taxa alvo. Se a meta de crescimento do mês é 1,5%, e você faturou 100% da meta padrão do mês, seu crescimento efetivo foi de 1,5%.</p>
-                </div>
-                <div class="space-y-2 md:space-y-3">
-                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="award" class="w-4 h-4 text-purple-500"></i> Progresso da Meta do Ano
-                    </h3>
-                    <p class="leading-relaxed">A barra de progresso no topo compara todo o faturamento real que a empresa já colocou no caixa este ano contra a <strong>soma de todas as 12 metas do ano</strong>. É o "loading" que mostra se a empresa está chegando no objetivo final.</p>
+                    <p class="leading-relaxed">No painel de lançamentos diários, o mês é dividido rigorosamente nas 5 fases que você estipulou (26 a fim, 01 a 07, 08 a 14, 15 a 21 e 22 a 25). Se uma fase não atingir a meta parcial, o sistema automaticamente <strong>aumenta a meta das próximas fases</strong> para te mostrar o que é necessário faturar para salvar o mês. Se você bater a meta com folga, os próximos blocos ficam mais fáceis!</p>
                 </div>
             </div>
-            
             <div class="p-4 md:p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
                 <button onclick="window.toggleHelp(false)" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 md:py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
                     Entendi
@@ -302,13 +306,13 @@
     </div>
 
     <div id="daily-modal" class="fixed inset-0 z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-2 md:px-4">
-        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col h-[95vh] md:max-h-[90vh]" id="daily-content">
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-6xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col h-[95vh] md:max-h-[90vh]" id="daily-content">
             <div class="p-4 md:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
                 <div>
                     <h2 class="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2" id="daily-modal-title">
                         <i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> Lançamentos
                     </h2>
-                    <p class="text-[10px] md:text-xs text-slate-500 font-medium mt-1 uppercase tracking-widest">Total: <span id="daily-modal-total" class="font-black text-blue-700 text-xs md:text-sm ml-1">R$ 0,00</span></p>
+                    <p class="text-[10px] md:text-xs text-slate-500 font-medium mt-1 uppercase tracking-widest">Total do Período: <span id="daily-modal-total" class="font-black text-blue-700 text-xs md:text-sm ml-1">R$ 0,00</span></p>
                 </div>
                 <button onclick="window.closeDailyModal()" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50 bg-white shadow-sm border border-slate-100 md:border-transparent md:bg-transparent md:shadow-none">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -316,12 +320,21 @@
             </div>
             
             <div class="p-4 md:p-6 overflow-y-auto flex-1 bg-slate-50/50">
+                
+                <div class="mb-6 bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-sm">
+                    <h3 class="text-[10px] md:text-xs font-bold text-slate-700 uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Análise e Ajuste de Metas (5 Fases)
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4" id="weekly-cards">
+                        </div>
+                </div>
+
                 <div id="daily-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
                     </div>
             </div>
             
             <div class="p-4 md:p-5 border-t border-slate-100 bg-white flex flex-col md:flex-row justify-between items-center gap-3 shrink-0">
-                <span class="text-[10px] md:text-xs text-slate-400 font-bold flex items-center gap-1 order-2 md:order-1"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvo automaticamente</span>
+                <span class="text-[10px] md:text-xs text-slate-400 font-bold flex items-center gap-1 order-2 md:order-1"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvo automaticamente no ano ativo</span>
                 <button onclick="window.closeDailyModal()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 md:py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20 order-1 md:order-2">
                     Concluído
                 </button>
@@ -331,7 +344,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         if (localStorage.getItem('igp_auth') !== 'true') window.location.href = 'login.html';
         else document.body.style.display = "block";
@@ -350,11 +363,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
-        const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         
-        let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0, dias: Array(31).fill(0) }));
-        
+        let anoAtual = 2026;
+        let unsubscribeSnapshot = null;
+        let dados = [];
         let configuracoes = { metaInicial: 737000, metaPerc: 1.5 };
         let saveTimeout;
         let chartLine, chartBar, chartBase, chartClientes;
@@ -366,6 +379,39 @@
             const numeric = str.toString().replace(/[^\d,-]/g, '').replace(',', '.');
             return parseFloat(numeric) || 0;
         };
+
+        const getFinancialDates = (monthIndex, year) => {
+            const mesesAbrev = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            let startDate = new Date(year, monthIndex - 1, 26);
+            let endDate = new Date(year, monthIndex, 25);
+            let dates = [];
+            let current = new Date(startDate);
+            
+            while(current <= endDate) {
+                let d = String(current.getDate()).padStart(2, '0');
+                let m = String(current.getMonth() + 1).padStart(2, '0');
+                let monthLabel = mesesAbrev[current.getMonth()];
+                dates.push({ key: `${d}/${m}`, label: `${d}/${monthLabel}` });
+                current.setDate(current.getDate() + 1);
+            }
+            return dates;
+        }
+
+        const getMetaDoMes = (monthIndex) => {
+            let base = configuracoes.metaInicial;
+            let percentual = configuracoes.metaPerc / 100;
+            let saldoGlobal = 0;
+            
+            for (let i = 0; i < monthIndex; i++) {
+                let meta = base * Math.pow(1 + percentual, i);
+                let recebido = dados[i].recebido || 0;
+                saldoGlobal += (recebido - meta);
+            }
+            
+            let metaBaseAtual = base * Math.pow(1 + percentual, monthIndex);
+            let dividaPassadaAtual = saldoGlobal < 0 ? Math.abs(saldoGlobal) : 0;
+            return metaBaseAtual + dividaPassadaAtual;
+        }
 
         window.toggleHelp = (show) => {
             const modal = document.getElementById('help-modal');
@@ -379,24 +425,112 @@
             }
         };
 
+        window.mudarAno = (novoAno) => {
+            anoAtual = parseInt(novoAno);
+            document.getElementById('table-year-title').innerText = anoAtual;
+            startRealtimeSync();
+        };
+
+        // Função principal do recálculo com as exatas 5 fases solicitadas
+        const updateWeeklySummary = (monthIndex) => {
+            let financialDates = getFinancialDates(monthIndex, anoAtual);
+            let totalDays = financialDates.length;
+            let targetMonth = getMetaDoMes(monthIndex);
+            
+            let P1 = [], P2 = [], P3 = [], P4 = [], P5 = [];
+            
+            // Agrupamento baseado nas regras da IGP FIBRA
+            financialDates.forEach(d => {
+                let day = parseInt(d.key.split('/')[0]);
+                if (day >= 26) P1.push(d); // 26 até o fim
+                else if (day >= 1 && day <= 7) P2.push(d); // 01 a 07
+                else if (day >= 8 && day <= 14) P3.push(d); // 08 a 14
+                else if (day >= 15 && day <= 21) P4.push(d); // 15 a 21
+                else if (day >= 22 && day <= 25) P5.push(d); // 22 a 25
+            });
+            
+            let getEarned = (weekArr) => weekArr.reduce((acc, d) => acc + (dados[monthIndex].dias[d.key] || 0), 0);
+            
+            let eP1 = getEarned(P1);
+            let eP2 = getEarned(P2);
+            let eP3 = getEarned(P3);
+            let eP4 = getEarned(P4);
+            let eP5 = getEarned(P5);
+
+            // Matemática Dinâmica Exata para 5 Fases
+            let tP1 = Math.max(0, targetMonth * (P1.length / totalDays));
+            
+            let rem2 = targetMonth - eP1;
+            let daysRem2 = totalDays - P1.length;
+            let tP2 = daysRem2 > 0 ? Math.max(0, rem2 * (P2.length / daysRem2)) : 0;
+            
+            let rem3 = rem2 - eP2;
+            let daysRem3 = daysRem2 - P2.length;
+            let tP3 = daysRem3 > 0 ? Math.max(0, rem3 * (P3.length / daysRem3)) : 0;
+            
+            let rem4 = rem3 - eP3;
+            let daysRem4 = daysRem3 - P3.length;
+            let tP4 = daysRem4 > 0 ? Math.max(0, rem4 * (P4.length / daysRem4)) : 0;
+
+            let rem5 = rem4 - eP4;
+            let daysRem5 = daysRem4 - P4.length;
+            let tP5 = daysRem5 > 0 ? Math.max(0, rem5) : 0; 
+
+            const generateCard = (num, name, dates, earned, target) => {
+                if(dates.length === 0) return '';
+                let label = dates.length > 1 ? `${dates[0].label.split('/')[0]}/${dates[0].label.split('/')[1]} a ${dates[dates.length-1].label.split('/')[0]}/${dates[dates.length-1].label.split('/')[1]}` : `${dates[0].label}`;
+                let pct = target > 0 ? (earned / target) * 100 : (earned > 0 ? 100 : 0);
+                let colorClass = pct >= 100 ? 'bg-emerald-400' : 'bg-blue-500';
+                let txtColorClass = pct >= 100 ? 'text-emerald-600' : 'text-blue-600';
+                
+                return `
+                    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 flex flex-col gap-1 relative overflow-hidden transition-all hover:shadow-sm">
+                        <div class="flex justify-between items-center mb-1.5 border-b border-slate-200 pb-1.5">
+                            <span class="text-[10px] md:text-xs font-black text-slate-600 uppercase">${name}</span>
+                            <span class="text-[9px] font-medium text-slate-400 bg-white px-1.5 py-0.5 rounded border border-slate-100">${label}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase">Meta Ajustada:</span>
+                            <span class="text-sm md:text-[15px] font-black text-slate-700">R$ ${formatBRL(target)}</span>
+                        </div>
+                        <div class="flex flex-col mt-0.5">
+                            <span class="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase">Faturado:</span>
+                            <span class="text-sm md:text-[15px] font-black ${txtColorClass}">R$ ${formatBRL(earned)}</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-1.5 mt-2.5">
+                            <div class="${colorClass} h-1.5 rounded-full transition-all duration-500" style="width: ${Math.min(pct, 100)}%"></div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            document.getElementById('weekly-cards').innerHTML = 
+                generateCard(1, "Fase 1", P1, eP1, tP1) + 
+                generateCard(2, "Fase 2", P2, eP2, tP2) + 
+                generateCard(3, "Fase 3", P3, eP3, tP3) + 
+                generateCard(4, "Fase 4", P4, eP4, tP4) +
+                generateCard(5, "Fase 5", P5, eP5, tP5);
+        };
+
         window.openDailyModal = (monthIndex) => {
             const mesNome = dados[monthIndex].mes;
-            document.getElementById('daily-modal-title').innerHTML = `<i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> ${mesNome}`;
+            document.getElementById('daily-modal-title').innerHTML = `<i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> ${mesNome} <span class="text-sm font-normal text-slate-400 ml-1">(${anoAtual})</span>`;
             document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(dados[monthIndex].recebido);
             
+            updateWeeklySummary(monthIndex);
+
             let htmlDias = '';
-            const qtdDias = daysInMonth[monthIndex];
+            let financialDates = getFinancialDates(monthIndex, anoAtual);
             
-            for(let d = 0; d < qtdDias; d++) {
-                let val = dados[monthIndex].dias[d] || 0;
-                // Ajustado o padding (py-2.5) e texto para facilitar clique em touch screens
+            for(let d of financialDates) {
+                let val = dados[monthIndex].dias[d.key] || 0;
                 htmlDias += `
                     <div class="bg-white p-2.5 md:p-3 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors group">
-                        <label class="text-[9px] md:text-[10px] text-slate-400 group-hover:text-blue-600 transition-colors font-bold uppercase tracking-wider mb-1 block">Dia ${String(d + 1).padStart(2, '0')}</label>
+                        <label class="text-[9px] md:text-[10px] text-slate-400 group-hover:text-blue-600 transition-colors font-bold uppercase tracking-wider mb-1 block">${d.label}</label>
                         <div class="relative">
                             <span class="absolute left-2 top-2.5 md:top-2 text-slate-400 font-bold text-xs">R$</span>
                             <input type="tel" value="${val > 0 ? formatBRL(val) : ''}" placeholder="0,00" 
-                                onchange="window.handleDailyInput(this, ${monthIndex}, ${d})" 
+                                onchange="window.handleDailyInput(this, ${monthIndex}, '${d.key}')" 
                                 class="w-full bg-slate-50 border border-transparent focus:border-blue-400 focus:bg-white rounded-lg py-2 md:py-1.5 pl-7 pr-2 text-right text-blue-900 font-black text-sm transition-all outline-none">
                         </div>
                     </div>
@@ -418,53 +552,78 @@
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         };
 
-        window.handleDailyInput = (element, monthIndex, dayIndex) => {
+        window.handleDailyInput = (element, monthIndex, dateKey) => {
             let val = parseCurrency(element.value);
             element.value = val > 0 ? formatBRL(val) : '';
             
-            dados[monthIndex].dias[dayIndex] = val;
+            dados[monthIndex].dias[dateKey] = val;
             
-            let totalMes = dados[monthIndex].dias.reduce((acc, curr) => acc + curr, 0);
+            let totalMes = Object.values(dados[monthIndex].dias).reduce((acc, curr) => acc + curr, 0);
             dados[monthIndex].recebido = totalMes;
             document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(totalMes);
             
+            updateWeeklySummary(monthIndex);
             updateAll();
             triggerSave();
         };
 
-        async function loadData() {
-            const docSnap = await getDoc(doc(db, "gestao_igp", "2026"));
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                if (data.meses) {
-                    dados = data.meses.map((m, i) => {
-                        let defaultDias = Array(31).fill(0);
-                        if (m.recebido > 0 && (!m.dias || m.dias.reduce((a,b)=>a+b,0) === 0)) {
-                            defaultDias[0] = m.recebido;
-                        } else if (m.dias) {
-                            defaultDias = m.dias;
-                        }
-                        return {
-                            mes: m.mes, recebido: m.recebido || 0, ativos: m.ativos || 0,
-                            novos: m.novos || 0, cancelados: m.cancelados || 0, dias: defaultDias
-                        };
+        function startRealtimeSync() {
+            if (unsubscribeSnapshot) unsubscribeSnapshot();
+            
+            const docRef = doc(db, "gestao_igp", String(anoAtual));
+            
+            unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
+                const activeElement = document.activeElement;
+                const isTyping = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
+                
+                if (isTyping) return;
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.configuracoes) {
+                        configuracoes.metaInicial = data.configuracoes.metaInicial || 737000;
+                        configuracoes.metaPerc = data.configuracoes.metaPerc || 1.5;
+                    }
+                    if (data.meses) {
+                        dados = data.meses.map((m, i) => {
+                            let financialDates = getFinancialDates(i, anoAtual);
+                            let mappedDias = {};
+                            financialDates.forEach(d => mappedDias[d.key] = 0);
+                            
+                            if (m.dias && Array.isArray(m.dias)) {
+                                financialDates.forEach((d, index) => { mappedDias[d.key] = m.dias[index] || 0; });
+                            } else if (m.dias && typeof m.dias === 'object') {
+                                mappedDias = { ...mappedDias, ...m.dias };
+                            } else if (m.recebido > 0) {
+                                mappedDias[financialDates[0].key] = m.recebido;
+                            }
+
+                            return {
+                                mes: m.mes, recebido: m.recebido || 0, ativos: m.ativos || 0,
+                                novos: m.novos || 0, cancelados: m.cancelados || 0, dias: mappedDias
+                            };
+                        });
+                    }
+                } else {
+                    dados = mesesNomes.map((nome, i) => {
+                        let financialDates = getFinancialDates(i, anoAtual);
+                        let mappedDias = {};
+                        financialDates.forEach(d => mappedDias[d.key] = 0);
+                        return { mes: nome, recebido: 0, ativos: 0, novos: 0, cancelados: 0, dias: mappedDias };
                     });
                 }
-                if (data.configuracoes) {
-                    configuracoes.metaInicial = data.configuracoes.metaInicial || 737000;
-                    configuracoes.metaPerc = data.configuracoes.metaPerc || 1.5;
-                }
-            }
-            document.getElementById('input-meta-inicial').value = formatBRL(configuracoes.metaInicial);
-            document.getElementById('input-meta-perc').value = configuracoes.metaPerc;
-            updateAll();
+                
+                document.getElementById('input-meta-inicial').value = formatBRL(configuracoes.metaInicial);
+                document.getElementById('input-meta-perc').value = configuracoes.metaPerc;
+                updateAll();
+            });
         }
 
         async function saveData() {
-            const indicator = document.getElementById('save-indicator');
-            indicator.style.opacity = "1";
-            await setDoc(doc(db, "gestao_igp", "2026"), { meses: dados, configuracoes: configuracoes });
-            setTimeout(() => indicator.style.opacity = "0", 2000);
+            const indicatorText = document.getElementById('save-text');
+            if(indicatorText) indicatorText.innerText = "Salvando...";
+            await setDoc(doc(db, "gestao_igp", String(anoAtual)), { meses: dados, configuracoes: configuracoes });
+            setTimeout(() => { if(indicatorText) indicatorText.innerText = "Ao Vivo"; }, 1000);
         }
 
         function triggerSave() {
@@ -600,13 +759,16 @@
 
                 htmlTabela += `
                     <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <td class="md:p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors text-sm md:text-base">${d.mes}</td>
+                        <td class="md:p-4 text-sm md:text-base">
+                            <span class="font-bold text-slate-600 group-hover:text-blue-700 transition-colors block">${d.mes}</span>
+                            <span class="text-[9px] font-medium text-slate-400 uppercase tracking-widest mt-0.5 block">(26 a 25)</span>
+                        </td>
                         <td data-label="Valor Recebido" class="md:p-2 w-full md:w-auto mobile-input-container">
                             <div class="flex items-center gap-2 justify-end w-full md:w-auto">
                                 <div class="flex-1 md:flex-none md:w-32 bg-white border ${recebido > 0 ? 'border-blue-200 bg-blue-50/20 text-blue-900' : 'border-slate-200 text-slate-400'} rounded-lg px-3 py-2 md:py-1.5 text-right font-black text-sm truncate cursor-default">
                                     ${recebido > 0 ? formatBRL(recebido) : '0,00'}
                                 </div>
-                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-2 md:p-1.5 rounded-lg transition-all shadow-sm focus:outline-none shrink-0">
+                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-2 md:p-1.5 rounded-lg transition-all shadow-sm focus:outline-none shrink-0" title="Ver dias exatos do fechamento">
                                     <i data-lucide="calendar-plus" class="w-4 h-4 md:w-4 md:h-4"></i>
                                 </button>
                             </div>
@@ -713,7 +875,11 @@
         }
 
         window.onload = () => { 
-            if (localStorage.getItem('igp_auth') === 'true') { initCharts(); loadData(); } 
+            if (localStorage.getItem('igp_auth') === 'true') { 
+                initCharts(); 
+                document.getElementById('ano-selector').value = "2026";
+                startRealtimeSync(); 
+            } 
         };
     </script>
 </body>
