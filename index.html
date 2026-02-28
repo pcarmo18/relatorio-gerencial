@@ -71,6 +71,9 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         @media (max-width: 768px) {
             .resp-table thead { display: none; }
             .resp-table tr { 
@@ -157,7 +160,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase tracking-wider">Taxa de Crescimento (%)</label>
+                        <label class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase tracking-wider">Taxa Padrão Atual (%)</label>
                         <div class="relative mt-1 md:mt-1.5">
                             <input type="text" id="input-meta-perc" class="meta-input rounded-xl w-full py-2.5 md:py-3 pl-4 pr-8 text-emerald-700 font-black text-base md:text-lg" placeholder="1.5" onchange="window.updateMetas(this, false)">
                             <span class="absolute right-4 top-3 md:top-3.5 text-slate-400 font-bold text-sm md:text-base">%</span>
@@ -244,7 +247,7 @@
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 pb-6 md:pb-10">
             <div class="glass-card p-4 md:p-6 rounded-xl md:rounded-2xl min-h-[300px] md:min-h-[350px] flex flex-col shadow-sm">
                 <h3 class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
-                    Faturamento Real vs Meta
+                    Faturamento Real vs Meta Padrão
                     <i data-lucide="trending-up" class="w-4 h-4 text-blue-500"></i>
                 </h3>
                 <div class="relative flex-1 w-full"><canvas id="chartLine"></canvas></div>
@@ -286,15 +289,21 @@
             <div class="p-5 md:p-6 overflow-y-auto flex-1 space-y-5 md:space-y-6 text-slate-600 text-xs md:text-sm">
                 <div class="space-y-2 md:space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="calendar" class="w-4 h-4 text-orange-500"></i> Fechamento Personalizado
+                        <i data-lucide="calendar" class="w-4 h-4 text-blue-500"></i> Fechamento Personalizado (26 a 25)
                     </h3>
-                    <p class="leading-relaxed">O sistema gera os dias de forma exata. O mês é baseado do dia 26 do mês anterior até o dia 25 do atual.</p>
+                    <p class="leading-relaxed">O mês financeiro no painel não acompanha o calendário convencional. O mês de "Fevereiro", por exemplo, compreende do dia 26 de Janeiro até o dia 25 de Fevereiro.</p>
                 </div>
                 <div class="space-y-2 md:space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Análise de Metas em 5 Fases
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Ajuste Semanal em 5 Fases
                     </h3>
-                    <p class="leading-relaxed">No painel de lançamentos diários, o mês é dividido rigorosamente nas 5 fases que você estipulou (26 a fim, 01 a 07, 08 a 14, 15 a 21 e 22 a 25). Se uma fase não atingir a meta parcial, o sistema automaticamente <strong>aumenta a meta das próximas fases</strong> para te mostrar o que é necessário faturar para salvar o mês. Se você bater a meta com folga, os próximos blocos ficam mais fáceis!</p>
+                    <p class="leading-relaxed">Ao clicar em um mês, você verá o faturamento dividido em 5 fases precisas (26 a fim, 01 a 07, 08 a 14, 15 a 21 e 22 a 25). Se a Fase 1 não bater a meta estabelecida, a diferença é somada nas próximas fases em tempo real para mostrar exatamente como salvar o mês.</p>
+                </div>
+                <div class="space-y-2 md:space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                        <i data-lucide="rocket" class="w-4 h-4 text-orange-500"></i> Termômetro de Metas
+                    </h3>
+                    <p class="leading-relaxed">Dentro do modal de lançamentos, existe um termômetro que desafia a equipe em 5 níveis (Padrão 1.5%, Avançado 2.0%, Master 2.5%, Elite 3.0%, Diamante 3.5%). Cada meta de nível já soma a dívida financeira calculada especificamente para aquele degrau de exigência.</p>
                 </div>
             </div>
             <div class="p-4 md:p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
@@ -321,9 +330,17 @@
             
             <div class="p-4 md:p-6 overflow-y-auto flex-1 bg-slate-50/50">
                 
+                <div class="mb-6 bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-sm overflow-hidden">
+                    <h3 class="text-[10px] md:text-xs font-bold text-slate-700 uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2">
+                        <i data-lucide="rocket" class="w-4 h-4 text-orange-500"></i> Termômetro de Metas (Este Mês)
+                    </h3>
+                    <div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-3 pb-2 md:pb-0 md:grid md:grid-cols-5 md:overflow-visible" id="modal-trilha-cards">
+                        </div>
+                </div>
+
                 <div class="mb-6 bg-white rounded-2xl p-4 md:p-5 border border-slate-200 shadow-sm">
                     <h3 class="text-[10px] md:text-xs font-bold text-slate-700 uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2">
-                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Análise e Ajuste de Metas (5 Fases)
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Análise de Metas em 5 Fases
                     </h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4" id="weekly-cards">
                         </div>
@@ -365,6 +382,14 @@
         
         const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         
+        const niveisDesafio = [
+            { nome: 'Diamante', perc: 3.5, color: 'text-amber-600', bg: 'bg-amber-500', bgL: 'bg-amber-50', border: 'border-amber-200', icon: 'gem' },
+            { nome: 'Elite', perc: 3.0, color: 'text-rose-600', bg: 'bg-rose-500', bgL: 'bg-rose-50', border: 'border-rose-200', icon: 'flame' },
+            { nome: 'Master', perc: 2.5, color: 'text-purple-600', bg: 'bg-purple-500', bgL: 'bg-purple-50', border: 'border-purple-200', icon: 'star' },
+            { nome: 'Avançado', perc: 2.0, color: 'text-blue-600', bg: 'bg-blue-500', bgL: 'bg-blue-50', border: 'border-blue-200', icon: 'zap' },
+            { nome: 'Padrão', perc: 1.5, color: 'text-emerald-600', bg: 'bg-emerald-500', bgL: 'bg-emerald-50', border: 'border-emerald-200', icon: 'check-circle' } 
+        ];
+
         let anoAtual = 2026;
         let unsubscribeSnapshot = null;
         let dados = [];
@@ -386,7 +411,6 @@
             let endDate = new Date(year, monthIndex, 25);
             let dates = [];
             let current = new Date(startDate);
-            
             while(current <= endDate) {
                 let d = String(current.getDate()).padStart(2, '0');
                 let m = String(current.getMonth() + 1).padStart(2, '0');
@@ -397,21 +421,59 @@
             return dates;
         }
 
-        const getMetaDoMes = (monthIndex) => {
+        const getMetaDoMesParaNivel = (monthIndex, levelPerc) => {
             let base = configuracoes.metaInicial;
-            let percentual = configuracoes.metaPerc / 100;
+            let percentual = levelPerc / 100;
             let saldoGlobal = 0;
-            
             for (let i = 0; i < monthIndex; i++) {
                 let meta = base * Math.pow(1 + percentual, i);
                 let recebido = dados[i].recebido || 0;
                 saldoGlobal += (recebido - meta);
             }
-            
             let metaBaseAtual = base * Math.pow(1 + percentual, monthIndex);
             let dividaPassadaAtual = saldoGlobal < 0 ? Math.abs(saldoGlobal) : 0;
             return metaBaseAtual + dividaPassadaAtual;
         }
+
+        window.renderModalTrilha = (monthIndex) => {
+            let recebido = dados[monthIndex]?.recebido || 0;
+            let html = '';
+            
+            [...niveisDesafio].reverse().forEach(nv => {
+                let metaExigida = getMetaDoMesParaNivel(monthIndex, nv.perc);
+                let progresso = metaExigida > 0 ? (recebido / metaExigida) * 100 : 0;
+                let batida = progresso >= 100;
+                
+                html += `
+                    <div class="${nv.bgL} border ${nv.border} rounded-2xl p-3 flex flex-col justify-between shrink-0 w-48 md:w-auto snap-center shadow-sm relative overflow-hidden">
+                        ${batida ? `<div class="absolute -right-3 -top-3 opacity-10"><i data-lucide="${nv.icon}" class="w-16 h-16 ${nv.color}"></i></div>` : ''}
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="font-black ${nv.color} text-xs uppercase tracking-wide flex items-center gap-1"><i data-lucide="${nv.icon}" class="w-3 h-3"></i> ${nv.nome}</span>
+                                <span class="text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded-md border border-slate-200">${nv.perc.toFixed(1)}%</span>
+                            </div>
+                            <div class="flex flex-col mb-2">
+                                <span class="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Meta (c/ Dívida)</span>
+                                <span class="font-black text-slate-800 text-sm tracking-tight">R$ ${formatBRL(metaExigida)}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-[9px] font-bold ${batida ? 'text-emerald-600' : 'text-slate-500'} uppercase truncate pr-1">
+                                    ${batida ? 'Batida! 🏆' : `Falta R$ ${formatBRL(metaExigida - recebido)}`}
+                                </span>
+                                <span class="text-[9px] font-black ${nv.color}">${Math.min(progresso, 100).toFixed(1)}%</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 border border-slate-200/50">
+                                <div class="${batida ? 'bg-emerald-400' : nv.bg} h-1.5 rounded-full transition-all duration-1000" style="width: ${Math.min(progresso, 100)}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('modal-trilha-cards').innerHTML = html;
+        };
 
         window.toggleHelp = (show) => {
             const modal = document.getElementById('help-modal');
@@ -431,49 +493,33 @@
             startRealtimeSync();
         };
 
-        // Função principal do recálculo com as exatas 5 fases solicitadas
         const updateWeeklySummary = (monthIndex) => {
             let financialDates = getFinancialDates(monthIndex, anoAtual);
             let totalDays = financialDates.length;
-            let targetMonth = getMetaDoMes(monthIndex);
+            let targetMonth = getMetaDoMesParaNivel(monthIndex, configuracoes.metaPerc);
             
             let P1 = [], P2 = [], P3 = [], P4 = [], P5 = [];
-            
-            // Agrupamento baseado nas regras da IGP FIBRA
             financialDates.forEach(d => {
                 let day = parseInt(d.key.split('/')[0]);
-                if (day >= 26) P1.push(d); // 26 até o fim
-                else if (day >= 1 && day <= 7) P2.push(d); // 01 a 07
-                else if (day >= 8 && day <= 14) P3.push(d); // 08 a 14
-                else if (day >= 15 && day <= 21) P4.push(d); // 15 a 21
-                else if (day >= 22 && day <= 25) P5.push(d); // 22 a 25
+                if (day >= 26) P1.push(d); 
+                else if (day >= 1 && day <= 7) P2.push(d); 
+                else if (day >= 8 && day <= 14) P3.push(d); 
+                else if (day >= 15 && day <= 21) P4.push(d); 
+                else if (day >= 22 && day <= 25) P5.push(d); 
             });
             
             let getEarned = (weekArr) => weekArr.reduce((acc, d) => acc + (dados[monthIndex].dias[d.key] || 0), 0);
             
-            let eP1 = getEarned(P1);
-            let eP2 = getEarned(P2);
-            let eP3 = getEarned(P3);
-            let eP4 = getEarned(P4);
-            let eP5 = getEarned(P5);
+            let eP1 = getEarned(P1), eP2 = getEarned(P2), eP3 = getEarned(P3), eP4 = getEarned(P4), eP5 = getEarned(P5);
 
-            // Matemática Dinâmica Exata para 5 Fases
             let tP1 = Math.max(0, targetMonth * (P1.length / totalDays));
-            
-            let rem2 = targetMonth - eP1;
-            let daysRem2 = totalDays - P1.length;
+            let rem2 = targetMonth - eP1, daysRem2 = totalDays - P1.length;
             let tP2 = daysRem2 > 0 ? Math.max(0, rem2 * (P2.length / daysRem2)) : 0;
-            
-            let rem3 = rem2 - eP2;
-            let daysRem3 = daysRem2 - P2.length;
+            let rem3 = rem2 - eP2, daysRem3 = daysRem2 - P2.length;
             let tP3 = daysRem3 > 0 ? Math.max(0, rem3 * (P3.length / daysRem3)) : 0;
-            
-            let rem4 = rem3 - eP3;
-            let daysRem4 = daysRem3 - P3.length;
+            let rem4 = rem3 - eP3, daysRem4 = daysRem3 - P3.length;
             let tP4 = daysRem4 > 0 ? Math.max(0, rem4 * (P4.length / daysRem4)) : 0;
-
-            let rem5 = rem4 - eP4;
-            let daysRem5 = daysRem4 - P4.length;
+            let rem5 = rem4 - eP4, daysRem5 = daysRem4 - P4.length;
             let tP5 = daysRem5 > 0 ? Math.max(0, rem5) : 0; 
 
             const generateCard = (num, name, dates, earned, target) => {
@@ -517,6 +563,7 @@
             document.getElementById('daily-modal-title').innerHTML = `<i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> ${mesNome} <span class="text-sm font-normal text-slate-400 ml-1">(${anoAtual})</span>`;
             document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(dados[monthIndex].recebido);
             
+            window.renderModalTrilha(monthIndex);
             updateWeeklySummary(monthIndex);
 
             let htmlDias = '';
@@ -562,8 +609,9 @@
             dados[monthIndex].recebido = totalMes;
             document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(totalMes);
             
+            window.renderModalTrilha(monthIndex);
             updateWeeklySummary(monthIndex);
-            updateAll();
+            updateAll(); 
             triggerSave();
         };
 
@@ -768,7 +816,7 @@
                                 <div class="flex-1 md:flex-none md:w-32 bg-white border ${recebido > 0 ? 'border-blue-200 bg-blue-50/20 text-blue-900' : 'border-slate-200 text-slate-400'} rounded-lg px-3 py-2 md:py-1.5 text-right font-black text-sm truncate cursor-default">
                                     ${recebido > 0 ? formatBRL(recebido) : '0,00'}
                                 </div>
-                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-2 md:p-1.5 rounded-lg transition-all shadow-sm focus:outline-none shrink-0" title="Ver dias exatos do fechamento">
+                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-2 md:p-1.5 rounded-lg transition-all shadow-sm focus:outline-none shrink-0" title="Ver dias e metas">
                                     <i data-lucide="calendar-plus" class="w-4 h-4 md:w-4 md:h-4"></i>
                                 </button>
                             </div>
