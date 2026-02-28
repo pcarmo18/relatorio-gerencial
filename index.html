@@ -71,127 +71,143 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        /* Ajustes específicos para Mobile na Tabela */
         @media (max-width: 768px) {
             .resp-table thead { display: none; }
             .resp-table tr { 
                 display: flex; flex-direction: column; padding: 1.25rem; margin-bottom: 1rem; 
                 background: #ffffff; border-radius: 1rem; border: 1px solid #e2e8f0; 
-                box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             }
-            .resp-table td { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border: none; }
-            .resp-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
-            .resp-table td:first-child { justify-content: center; font-size: 1.1rem; font-weight: 800; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; margin-bottom: 0.5rem; color: #1e293b; }
+            .resp-table td { 
+                display: flex; justify-content: space-between; align-items: center; 
+                padding: 0.6rem 0; border-bottom: 1px dashed #f1f5f9; gap: 1rem;
+            }
+            .resp-table td:last-child { border-bottom: none; }
+            .resp-table td::before { 
+                content: attr(data-label); font-weight: 700; color: #64748b; 
+                font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; 
+                flex-shrink: 0; max-width: 45%;
+            }
+            .resp-table td:first-child { 
+                justify-content: center; font-size: 1.25rem; font-weight: 900; 
+                border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 0.5rem; color: #1e293b; 
+            }
             .resp-table td:first-child::before { display: none; }
+            
+            /* Ajustes para inputs não quebrarem layout no mobile */
+            .resp-table input { text-align: right; max-width: 150px; }
+            .mobile-input-container { flex-grow: 1; display: flex; justify-content: flex-end; }
         }
     </style>
 </head>
-<body class="p-4 lg:p-8 relative">
+<body class="p-3 md:p-4 lg:p-8 relative">
 
     <div class="max-w-[1500px] mx-auto space-y-6 lg:space-y-8">
         
         <header class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4">
-            <div class="flex flex-col items-center md:items-start">
-                <img src="logo igp.png" alt="IGP FIBRA Logo" class="h-16 lg:h-20 object-contain mb-2 drop-shadow-sm" onerror="this.src='https://via.placeholder.com/150x50?text=IGP+FIBRA'">
-                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                    Dashboard Gerencial <span class="text-slate-300 mx-2">|</span> Desenvolvido por Patrick Carmo
+            <div class="flex flex-col items-center md:items-start w-full md:w-auto">
+                <img src="logo igp.png" alt="IGP FIBRA Logo" class="h-14 lg:h-20 object-contain mb-2 drop-shadow-sm" onerror="this.src='https://via.placeholder.com/150x50?text=IGP+FIBRA'">
+                <p class="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-widest text-center md:text-left">
+                    Dashboard Gerencial <span class="text-slate-300 mx-1 md:mx-2">|</span> Por Patrick Carmo
                 </p>
             </div>
             
-            <div class="flex items-center gap-3 flex-wrap justify-center">
-                <div id="save-indicator" class="opacity-0 transition-opacity duration-300 text-xs font-bold text-blue-600 flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
-                    <i data-lucide="cloud-check" class="w-4 h-4"></i>
-                    <span>Sincronizado</span>
+            <div class="flex items-center gap-2 md:gap-3 flex-wrap justify-center w-full md:w-auto">
+                <div id="save-indicator" class="opacity-0 transition-opacity duration-300 text-[10px] md:text-xs font-bold text-blue-600 flex items-center gap-1.5 bg-blue-50 px-2 md:px-3 py-1.5 rounded-full border border-blue-100">
+                    <i data-lucide="cloud-check" class="w-3.5 h-3.5 md:w-4 md:h-4"></i>
+                    <span>Salvo</span>
                 </div>
                 
-                <button onclick="window.toggleHelp(true)" class="group flex items-center gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-sky-200 text-sm font-bold transition-all shadow-sm">
-                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Entender a Lógica
+                <button onclick="window.toggleHelp(true)" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-sky-200 text-xs md:text-sm font-bold transition-all shadow-sm">
+                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Lógica
                 </button>
 
-                <button onclick="window.fazerLogout()" class="group flex items-center gap-2 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-rose-200 text-sm font-bold transition-all shadow-sm">
+                <button onclick="window.fazerLogout()" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-rose-200 text-xs md:text-sm font-bold transition-all shadow-sm">
                     <i data-lucide="power" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Sair
                 </button>
             </div>
         </header>
 
-        <div class="glass-card rounded-2xl p-6 lg:p-8 flex flex-col lg:flex-row gap-8 items-center border-l-4 border-l-blue-600">
-            <div class="w-full lg:w-1/2 space-y-5">
+        <div class="glass-card rounded-2xl p-5 md:p-6 lg:p-8 flex flex-col lg:flex-row gap-6 lg:gap-8 items-center border-t-4 lg:border-t-0 lg:border-l-4 border-blue-600">
+            <div class="w-full lg:w-1/2 space-y-4 md:space-y-5">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
-                        <i data-lucide="settings" class="w-4 h-4 text-blue-600"></i> Parâmetros Iniciais
+                    <h3 class="text-xs md:text-sm font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
+                        <i data-lucide="settings" class="w-4 h-4 md:w-5 md:h-5 text-blue-600"></i> Parâmetros Iniciais
                     </h3>
                 </div>
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Faturamento Base (R$)</label>
-                        <div class="relative mt-1.5">
-                            <span class="absolute left-4 top-3 text-slate-400 font-bold">R$</span>
-                            <input type="text" id="input-meta-inicial" class="meta-input rounded-xl w-full py-2.5 pl-10 pr-4 text-blue-900 font-black text-lg" placeholder="737.000,00" onchange="window.updateMetas(this, true)">
+                        <label class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase tracking-wider">Faturamento Base (R$)</label>
+                        <div class="relative mt-1 md:mt-1.5">
+                            <span class="absolute left-4 top-3 md:top-3.5 text-slate-400 font-bold text-sm md:text-base">R$</span>
+                            <input type="text" id="input-meta-inicial" class="meta-input rounded-xl w-full py-2.5 md:py-3 pl-10 pr-4 text-blue-900 font-black text-base md:text-lg" placeholder="737.000,00" onchange="window.updateMetas(this, true)">
                         </div>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Taxa de Crescimento (%)</label>
-                        <div class="relative mt-1.5">
-                            <input type="text" id="input-meta-perc" class="meta-input rounded-xl w-full py-2.5 pl-4 pr-8 text-emerald-700 font-black text-lg" placeholder="1.5" onchange="window.updateMetas(this, false)">
-                            <span class="absolute right-4 top-3 text-slate-400 font-bold">%</span>
+                        <label class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase tracking-wider">Taxa de Crescimento (%)</label>
+                        <div class="relative mt-1 md:mt-1.5">
+                            <input type="text" id="input-meta-perc" class="meta-input rounded-xl w-full py-2.5 md:py-3 pl-4 pr-8 text-emerald-700 font-black text-base md:text-lg" placeholder="1.5" onchange="window.updateMetas(this, false)">
+                            <span class="absolute right-4 top-3 md:top-3.5 text-slate-400 font-bold text-sm md:text-base">%</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="w-full lg:w-1/2 flex flex-col items-end border-t border-slate-200 lg:border-t-0 lg:border-l pt-6 lg:pt-0 lg:pl-8">
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1" id="kpi-status-title">Balanço Global do Ano</p>
-                <div class="flex items-end gap-3">
-                    <span id="kpi-saldo-global" class="text-4xl lg:text-5xl font-black tracking-tighter transition-colors duration-300">R$ 0,00</span>
+            <div class="w-full lg:w-1/2 flex flex-col items-center lg:items-end border-t border-slate-200 lg:border-t-0 lg:border-l pt-5 lg:pt-0 lg:pl-8 text-center lg:text-right">
+                <p class="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-widest mb-1" id="kpi-status-title">Balanço Global do Ano</p>
+                <div class="flex justify-center lg:justify-end items-end gap-3 w-full">
+                    <span id="kpi-saldo-global" class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter transition-colors duration-300 break-all">R$ 0,00</span>
                 </div>
-                <p id="kpi-saldo-sub" class="text-sm font-bold mt-2 text-slate-500">Calculando...</p>
+                <p id="kpi-saldo-sub" class="text-xs md:text-sm font-bold mt-2 text-slate-500">Calculando...</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 xl:grid-cols-6 gap-4 lg:gap-6">
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1">
-                <div class="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform"><i data-lucide="wallet" class="w-24 h-24"></i></div>
-                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Faturado Acum. <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-blue-500"></i></span>
-                <span id="kpi-faturamento" class="text-2xl font-black text-slate-800 tracking-tight">R$ 0</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3 lg:gap-6">
+            <div class="glass-card p-4 md:p-5 rounded-xl md:rounded-2xl relative overflow-hidden group col-span-1">
+                <div class="absolute -right-2 -top-2 md:-right-4 md:-top-4 opacity-[0.03] group-hover:scale-110 transition-transform"><i data-lucide="wallet" class="w-20 h-20 md:w-24 md:h-24"></i></div>
+                <span class="text-slate-500 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2">Faturado Acum. <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-blue-500"></i></span>
+                <span id="kpi-faturamento" class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">R$ 0</span>
             </div>
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1">
-                <div class="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform"><i data-lucide="target" class="w-24 h-24"></i></div>
-                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Meta Acum. <i data-lucide="crosshair" class="w-3.5 h-3.5 text-slate-400"></i></span>
-                <span id="kpi-meta-acumulada" class="text-2xl font-black text-slate-800 tracking-tight">R$ 0</span>
+            <div class="glass-card p-4 md:p-5 rounded-xl md:rounded-2xl relative overflow-hidden group col-span-1">
+                <div class="absolute -right-2 -top-2 md:-right-4 md:-top-4 opacity-[0.03] group-hover:scale-110 transition-transform"><i data-lucide="target" class="w-20 h-20 md:w-24 md:h-24"></i></div>
+                <span class="text-slate-500 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2">Meta Acum. <i data-lucide="crosshair" class="w-3.5 h-3.5 text-slate-400"></i></span>
+                <span id="kpi-meta-acumulada" class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">R$ 0</span>
             </div>
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 border border-blue-200 bg-blue-50/50">
-                <div class="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="activity" class="w-24 h-24 text-blue-600"></i></div>
-                <span class="text-blue-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Base Ativa Atual <i data-lucide="users" class="w-3.5 h-3.5"></i></span>
-                <span id="kpi-base-ativa" class="text-2xl font-black text-blue-900 tracking-tight">0</span>
+            <div class="glass-card p-4 md:p-5 rounded-xl md:rounded-2xl relative overflow-hidden group col-span-1 border border-blue-200 bg-blue-50/50">
+                <div class="absolute -right-2 -top-2 md:-right-4 md:-top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="activity" class="w-20 h-20 md:w-24 md:h-24 text-blue-600"></i></div>
+                <span class="text-blue-600 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2">Base Ativa Atual <i data-lucide="users" class="w-3.5 h-3.5"></i></span>
+                <span id="kpi-base-ativa" class="text-xl md:text-2xl font-black text-blue-900 tracking-tight">0</span>
             </div>
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 border border-emerald-200 bg-emerald-50/50">
-                <div class="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="user-plus" class="w-24 h-24 text-emerald-600"></i></div>
-                <span class="text-emerald-700 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Novos Acum. <i data-lucide="trending-up" class="w-3.5 h-3.5"></i></span>
-                <span id="kpi-novos-acum" class="text-2xl font-black text-emerald-900 tracking-tight">0</span>
+            <div class="glass-card p-4 md:p-5 rounded-xl md:rounded-2xl relative overflow-hidden group col-span-1 border border-emerald-200 bg-emerald-50/50">
+                <div class="absolute -right-2 -top-2 md:-right-4 md:-top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="user-plus" class="w-20 h-20 md:w-24 md:h-24 text-emerald-600"></i></div>
+                <span class="text-emerald-700 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2">Novos Acum. <i data-lucide="trending-up" class="w-3.5 h-3.5"></i></span>
+                <span id="kpi-novos-acum" class="text-xl md:text-2xl font-black text-emerald-900 tracking-tight">0</span>
             </div>
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 border border-rose-200 bg-rose-50/50">
-                <div class="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="user-minus" class="w-24 h-24 text-rose-600"></i></div>
-                <span class="text-rose-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-2">Cancelados Acum. <i data-lucide="trending-down" class="w-3.5 h-3.5"></i></span>
-                <span id="kpi-canc-acum" class="text-2xl font-black text-rose-900 tracking-tight">0</span>
+            <div class="glass-card p-4 md:p-5 rounded-xl md:rounded-2xl relative overflow-hidden group col-span-1 border border-rose-200 bg-rose-50/50">
+                <div class="absolute -right-2 -top-2 md:-right-4 md:-top-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="user-minus" class="w-20 h-20 md:w-24 md:h-24 text-rose-600"></i></div>
+                <span class="text-rose-600 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2">Cancelados Acum. <i data-lucide="trending-down" class="w-3.5 h-3.5"></i></span>
+                <span id="kpi-canc-acum" class="text-xl md:text-2xl font-black text-rose-900 tracking-tight">0</span>
             </div>
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group col-span-2 xl:col-span-1 bg-slate-800 border-slate-700 text-white flex flex-col justify-center">
-                <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="award" class="w-24 h-24"></i></div>
-                <div class="flex justify-between items-end mb-2">
-                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5" title="Progresso em direção à meta total dos 12 meses do ano">Meta do Ano <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-400"></i></span>
-                    <span id="kpi-progresso-text" class="text-lg font-black text-white tracking-tight">0%</span>
+            <div class="glass-card p-4 md:p-5 rounded-xl md:rounded-2xl relative overflow-hidden group col-span-1 bg-slate-800 border-slate-700 text-white flex flex-col justify-center">
+                <div class="absolute -right-2 -top-2 md:-right-4 md:-top-4 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="award" class="w-20 h-20 md:w-24 md:h-24"></i></div>
+                <div class="flex justify-between items-end mb-1 md:mb-2">
+                    <span class="text-slate-400 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5" title="Progresso em direção à meta total dos 12 meses do ano">Meta do Ano <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-400"></i></span>
+                    <span id="kpi-progresso-text" class="text-base md:text-lg font-black text-white tracking-tight">0%</span>
                 </div>
-                <div class="w-full bg-slate-700 rounded-full h-2.5 mt-1 overflow-hidden border border-slate-600">
-                    <div id="kpi-progresso-bar" class="bg-gradient-to-r from-blue-500 to-emerald-400 h-2.5 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+                <div class="w-full bg-slate-700 rounded-full h-2 md:h-2.5 mt-1 overflow-hidden border border-slate-600">
+                    <div id="kpi-progresso-bar" class="bg-gradient-to-r from-blue-500 to-emerald-400 h-2 md:h-2.5 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
                 </div>
             </div>
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden flex flex-col shadow-sm pb-4">
-            <div class="p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center">
-                <h2 class="font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wider">
-                    <i data-lucide="table" class="w-4 h-4 text-blue-600"></i> Histórico Mensal & Saúde do Ano
+        <div class="glass-card rounded-xl md:rounded-2xl overflow-hidden flex flex-col shadow-sm pb-2 md:pb-4">
+            <div class="p-4 md:p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center">
+                <h2 class="font-bold text-slate-700 flex items-center gap-2 text-xs md:text-sm uppercase tracking-wider">
+                    <i data-lucide="table" class="w-4 h-4 text-blue-600"></i> Histórico Mensal & Saúde
                 </h2>
             </div>
-            <div class="p-2 lg:p-4 overflow-x-auto">
+            <div class="p-2 md:p-4 overflow-x-auto">
                 <table class="w-full resp-table whitespace-nowrap">
                     <thead>
                         <tr class="text-slate-500 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
@@ -202,9 +218,9 @@
                             <th class="p-3 text-right">Base Ativa</th>
                             <th class="p-3 text-right">Novos</th>
                             <th class="p-3 text-right">Canc.</th>
-                            <th class="p-3 text-right">% Realizada (Mês)</th>
-                            <th class="p-3 text-right text-emerald-600" title="Crescimento efetivo alcançado no mês em relação à meta estipulada">Cresc. Efetivo (Mês)</th>
-                            <th class="p-3 text-right text-blue-600">Cresc. Clientes (Mês)</th>
+                            <th class="p-3 text-right">% Realizada</th>
+                            <th class="p-3 text-right text-emerald-600">Cresc. Efetivo</th>
+                            <th class="p-3 text-right text-blue-600">Cresc. Clientes</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -213,100 +229,100 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
-            <div class="glass-card p-6 rounded-2xl min-h-[350px] flex flex-col shadow-sm">
-                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
-                    Faturamento Real vs Meta (C/ Recuperação)
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 pb-6 md:pb-10">
+            <div class="glass-card p-4 md:p-6 rounded-xl md:rounded-2xl min-h-[300px] md:min-h-[350px] flex flex-col shadow-sm">
+                <h3 class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                    Faturamento Real vs Meta
                     <i data-lucide="trending-up" class="w-4 h-4 text-blue-500"></i>
                 </h3>
-                <div class="relative flex-1"><canvas id="chartLine"></canvas></div>
+                <div class="relative flex-1 w-full"><canvas id="chartLine"></canvas></div>
             </div>
-            <div class="glass-card p-6 rounded-2xl min-h-[350px] flex flex-col shadow-sm">
-                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+            <div class="glass-card p-4 md:p-6 rounded-xl md:rounded-2xl min-h-[300px] md:min-h-[350px] flex flex-col shadow-sm">
+                <h3 class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
                     Crescimento Efetivo Mensal (%)
                     <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-500"></i>
                 </h3>
-                <div class="relative flex-1"><canvas id="chartBar"></canvas></div>
+                <div class="relative flex-1 w-full"><canvas id="chartBar"></canvas></div>
             </div>
-            <div class="glass-card p-6 rounded-2xl min-h-[300px] flex flex-col shadow-sm">
-                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+            <div class="glass-card p-4 md:p-6 rounded-xl md:rounded-2xl min-h-[250px] md:min-h-[300px] flex flex-col shadow-sm">
+                <h3 class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
                     Evolução da Base Ativa
                     <i data-lucide="users" class="w-4 h-4 text-blue-500"></i>
                 </h3>
-                <div class="relative flex-1"><canvas id="chartBase"></canvas></div>
+                <div class="relative flex-1 w-full"><canvas id="chartBase"></canvas></div>
             </div>
-            <div class="glass-card p-6 rounded-2xl min-h-[300px] flex flex-col shadow-sm">
-                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+            <div class="glass-card p-4 md:p-6 rounded-xl md:rounded-2xl min-h-[250px] md:min-h-[300px] flex flex-col shadow-sm">
+                <h3 class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
                     Contratos: Novos vs Cancelados
                     <i data-lucide="git-compare" class="w-4 h-4 text-purple-500"></i>
                 </h3>
-                <div class="relative flex-1"><canvas id="chartClientes"></canvas></div>
+                <div class="relative flex-1 w-full"><canvas id="chartClientes"></canvas></div>
             </div>
         </div>
     </div>
 
-    <div id="help-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/40 backdrop-blur-sm px-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="help-content">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+    <div id="help-modal" class="fixed inset-0 z-[70] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-4">
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="help-content">
+            <div class="p-4 md:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h2 class="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2">
                     <i data-lucide="help-circle" class="w-5 h-5 text-blue-600"></i> Como a Lógica Funciona
                 </h2>
-                <button onclick="window.toggleHelp(false)" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50">
+                <button onclick="window.toggleHelp(false)" class="text-slate-400 hover:text-rose-500 transition-colors p-1.5 md:p-2 rounded-xl hover:bg-rose-50">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <div class="p-6 overflow-y-auto flex-1 space-y-6 text-slate-600 text-sm">
-                <div class="space-y-3">
-                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+            <div class="p-5 md:p-6 overflow-y-auto flex-1 space-y-5 md:space-y-6 text-slate-600 text-xs md:text-sm">
+                <div class="space-y-2 md:space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                         <i data-lucide="refresh-cw" class="w-4 h-4 text-blue-500"></i> Meta e Recuperação
                     </h3>
                     <p class="leading-relaxed">A <strong>Meta do Mês</strong> exibe o valor padrão estipulado pela sua taxa de crescimento. Se no mês anterior houve um déficit no caixa, o painel mostrará logo abaixo da meta o valor adicional que você precisa faturar <strong>(Recuperar)</strong> para que a empresa volte a bater o lucro ideal do ano.</p>
                 </div>
-                <div class="space-y-3">
-                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                <div class="space-y-2 md:space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                         <i data-lucide="dollar-sign" class="w-4 h-4 text-emerald-500"></i> Cresc. Efetivo (Mês)
                     </h3>
                     <p class="leading-relaxed">Mostra o seu crescimento financeiro real isolado naquele mês, sem carregar dívidas anteriores. É calculado aplicando a porcentagem da meta que você atingiu sobre a taxa alvo. Se a meta de crescimento do mês é 1,5%, e você faturou 100% da meta padrão do mês, seu crescimento efetivo foi de 1,5%.</p>
                 </div>
-                <div class="space-y-3">
-                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                <div class="space-y-2 md:space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                         <i data-lucide="award" class="w-4 h-4 text-purple-500"></i> Progresso da Meta do Ano
                     </h3>
                     <p class="leading-relaxed">A barra de progresso no topo compara todo o faturamento real que a empresa já colocou no caixa este ano contra a <strong>soma de todas as 12 metas do ano</strong>. É o "loading" que mostra se a empresa está chegando no objetivo final.</p>
                 </div>
             </div>
             
-            <div class="p-5 border-t border-slate-100 bg-slate-50 text-right rounded-b-3xl">
-                <button onclick="window.toggleHelp(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
+            <div class="p-4 md:p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="window.toggleHelp(false)" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 md:py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
                     Entendi
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="daily-modal" class="fixed inset-0 z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="daily-content">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+    <div id="daily-modal" class="fixed inset-0 z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-2 md:px-4">
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col h-[95vh] md:max-h-[90vh]" id="daily-content">
+            <div class="p-4 md:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2" id="daily-modal-title">
-                        <i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> Lançamento Diário
+                    <h2 class="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2" id="daily-modal-title">
+                        <i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> Lançamentos
                     </h2>
-                    <p class="text-xs text-slate-500 font-medium mt-1 uppercase tracking-widest">Total do Mês: <span id="daily-modal-total" class="font-black text-blue-700 text-sm ml-1">R$ 0,00</span></p>
+                    <p class="text-[10px] md:text-xs text-slate-500 font-medium mt-1 uppercase tracking-widest">Total: <span id="daily-modal-total" class="font-black text-blue-700 text-xs md:text-sm ml-1">R$ 0,00</span></p>
                 </div>
-                <button onclick="window.closeDailyModal()" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50">
+                <button onclick="window.closeDailyModal()" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50 bg-white shadow-sm border border-slate-100 md:border-transparent md:bg-transparent md:shadow-none">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <div class="p-6 overflow-y-auto flex-1 bg-slate-50/50">
-                <div id="daily-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="p-4 md:p-6 overflow-y-auto flex-1 bg-slate-50/50">
+                <div id="daily-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
                     </div>
             </div>
             
-            <div class="p-5 border-t border-slate-100 bg-white flex justify-between items-center rounded-b-3xl">
-                <span class="text-xs text-slate-400 font-bold flex items-center gap-1"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvo automaticamente ao digitar</span>
-                <button onclick="window.closeDailyModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
+            <div class="p-4 md:p-5 border-t border-slate-100 bg-white flex flex-col md:flex-row justify-between items-center gap-3 shrink-0">
+                <span class="text-[10px] md:text-xs text-slate-400 font-bold flex items-center gap-1 order-2 md:order-1"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvo automaticamente</span>
+                <button onclick="window.closeDailyModal()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 md:py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20 order-1 md:order-2">
                     Concluído
                 </button>
             </div>
@@ -335,9 +351,8 @@
         const db = getFirestore(app);
         
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // Dias por mês (ano não bissexto base)
+        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
-        // Estrutura atualizada incluindo o array 'dias'
         let dados = meses.map(m => ({ mes: m, recebido: 0, ativos: 0, novos: 0, cancelados: 0, dias: Array(31).fill(0) }));
         
         let configuracoes = { metaInicial: 737000, metaPerc: 1.5 };
@@ -364,10 +379,9 @@
             }
         };
 
-        // Funções do Modal Diário
         window.openDailyModal = (monthIndex) => {
             const mesNome = dados[monthIndex].mes;
-            document.getElementById('daily-modal-title').innerHTML = `<i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> Lançamento Diário - ${mesNome}`;
+            document.getElementById('daily-modal-title').innerHTML = `<i data-lucide="calendar-days" class="w-5 h-5 text-blue-600"></i> ${mesNome}`;
             document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(dados[monthIndex].recebido);
             
             let htmlDias = '';
@@ -375,14 +389,15 @@
             
             for(let d = 0; d < qtdDias; d++) {
                 let val = dados[monthIndex].dias[d] || 0;
+                // Ajustado o padding (py-2.5) e texto para facilitar clique em touch screens
                 htmlDias += `
-                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors group">
-                        <label class="text-[10px] text-slate-400 group-hover:text-blue-600 transition-colors font-bold uppercase tracking-wider mb-1 block">Dia ${String(d + 1).padStart(2, '0')}</label>
+                    <div class="bg-white p-2.5 md:p-3 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors group">
+                        <label class="text-[9px] md:text-[10px] text-slate-400 group-hover:text-blue-600 transition-colors font-bold uppercase tracking-wider mb-1 block">Dia ${String(d + 1).padStart(2, '0')}</label>
                         <div class="relative">
-                            <span class="absolute left-2 top-1.5 text-slate-400 font-bold text-xs">R$</span>
-                            <input type="text" value="${val > 0 ? formatBRL(val) : ''}" placeholder="0,00" 
+                            <span class="absolute left-2 top-2.5 md:top-2 text-slate-400 font-bold text-xs">R$</span>
+                            <input type="tel" value="${val > 0 ? formatBRL(val) : ''}" placeholder="0,00" 
                                 onchange="window.handleDailyInput(this, ${monthIndex}, ${d})" 
-                                class="w-full bg-slate-50 border border-transparent focus:border-blue-400 focus:bg-white rounded-lg py-1 pl-7 pr-2 text-right text-blue-900 font-black text-sm transition-all outline-none">
+                                class="w-full bg-slate-50 border border-transparent focus:border-blue-400 focus:bg-white rounded-lg py-2 md:py-1.5 pl-7 pr-2 text-right text-blue-900 font-black text-sm transition-all outline-none">
                         </div>
                     </div>
                 `;
@@ -409,7 +424,6 @@
             
             dados[monthIndex].dias[dayIndex] = val;
             
-            // Recalcula o total do mês e atualiza interface
             let totalMes = dados[monthIndex].dias.reduce((acc, curr) => acc + curr, 0);
             dados[monthIndex].recebido = totalMes;
             document.getElementById('daily-modal-total').innerText = 'R$ ' + formatBRL(totalMes);
@@ -425,21 +439,14 @@
                 if (data.meses) {
                     dados = data.meses.map((m, i) => {
                         let defaultDias = Array(31).fill(0);
-                        
-                        // Sistema de Migração: Se tem valor recebido antigo, mas não tem array de dias salvo, joga pro Dia 1.
                         if (m.recebido > 0 && (!m.dias || m.dias.reduce((a,b)=>a+b,0) === 0)) {
                             defaultDias[0] = m.recebido;
                         } else if (m.dias) {
                             defaultDias = m.dias;
                         }
-
                         return {
-                            mes: m.mes,
-                            recebido: m.recebido || 0,
-                            ativos: m.ativos || 0,
-                            novos: m.novos || 0,
-                            cancelados: m.cancelados || 0,
-                            dias: defaultDias
+                            mes: m.mes, recebido: m.recebido || 0, ativos: m.ativos || 0,
+                            novos: m.novos || 0, cancelados: m.cancelados || 0, dias: defaultDias
                         };
                     });
                 }
@@ -507,7 +514,6 @@
             let metasChart = [];
             let efetivoChart = [];
             let coresBarChart = [];
-            
             let baseAtivaChart = [];
             let novosChart = [];
             let cancChart = [];
@@ -521,19 +527,19 @@
                 let dividaPassada = saldoGlobalAno < 0 ? Math.abs(saldoGlobalAno) : 0;
                 let metaAjustada = metaPadraoMes + dividaPassada;
                 
-                let stringMeta = `<div class="font-black text-slate-800 tracking-tight text-[15px]">R$ ${formatBRL(metaPadraoMes)}</div>`;
+                let stringMeta = `<div class="font-black text-slate-800 tracking-tight text-sm md:text-[15px]">R$ ${formatBRL(metaPadraoMes)}</div>`;
                 if(dividaPassada > 0) {
-                    stringMeta += `<div class="text-[10px] text-rose-500 font-bold mt-1 flex justify-end items-center gap-1" title="Déficit que precisa ser recuperado para o ano ficar azul">
+                    stringMeta += `<div class="text-[9px] md:text-[10px] text-rose-500 font-bold mt-1 flex justify-end items-center gap-1" title="Déficit que precisa ser recuperado">
                         <i data-lucide="alert-circle" class="w-3 h-3"></i> + R$ ${formatBRL(dividaPassada)} <span class="text-[8px] uppercase tracking-wider opacity-80">(Recuperar)</span>
                     </div>`;
                 } else {
-                    stringMeta += `<div class="text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-wider">Meta Base</div>`;
+                    stringMeta += `<div class="text-[8px] md:text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-wider">Meta Base</div>`;
                 }
 
-                let stringDeficit = `<span class="text-slate-400 font-medium text-xs">-</span>`;
-                let stringPct = `<span class="text-slate-400 font-medium text-xs">-</span>`;
-                let stringDesempenhoEfetivo = `<span class="text-slate-400 font-medium text-xs">-</span>`;
-                let stringCrescCli = `<span class="text-slate-400 font-medium text-xs">-</span>`;
+                let stringDeficit = `<span class="text-slate-400 font-medium text-[10px] md:text-xs">-</span>`;
+                let stringPct = `<span class="text-slate-400 font-medium text-[10px] md:text-xs">-</span>`;
+                let stringDesempenhoEfetivo = `<span class="text-slate-400 font-medium text-[10px] md:text-xs">-</span>`;
+                let stringCrescCli = `<span class="text-slate-400 font-medium text-[10px] md:text-xs">-</span>`;
 
                 let recebido = d.recebido || 0;
                 let ativos = d.ativos || 0;
@@ -552,31 +558,30 @@
                     let crescEfetivoMensal = configuracoes.metaPerc * (pctAtingida / 100);
 
                     if (saldoMes < 0) {
-                        stringDeficit = `<span class="text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded border border-rose-100 text-xs whitespace-nowrap" title="Mês operou no prejuízo">- R$ ${formatBRL(Math.abs(saldoMes))}</span>`;
+                        stringDeficit = `<span class="text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded border border-rose-100 text-[10px] md:text-xs whitespace-nowrap">- R$ ${formatBRL(Math.abs(saldoMes))}</span>`;
                     } else {
-                        stringDeficit = `<span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded border border-emerald-100 text-xs whitespace-nowrap" title="Mês operou no lucro">+ R$ ${formatBRL(saldoMes)}</span>`;
+                        stringDeficit = `<span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded border border-emerald-100 text-[10px] md:text-xs whitespace-nowrap">+ R$ ${formatBRL(saldoMes)}</span>`;
                     }
 
                     if (pctAtingida >= 100) {
-                        stringPct = `<span class="text-emerald-600 font-black flex items-center justify-end gap-1 text-sm"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> ${pctAtingida.toFixed(2)}%</span>`;
+                        stringPct = `<span class="text-emerald-600 font-black flex items-center justify-end gap-1 text-xs md:text-sm"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> ${pctAtingida.toFixed(2)}%</span>`;
                     } else {
-                        stringPct = `<span class="text-rose-600 font-black flex items-center justify-end gap-1 text-sm"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> ${pctAtingida.toFixed(2)}%</span>`;
+                        stringPct = `<span class="text-rose-600 font-black flex items-center justify-end gap-1 text-xs md:text-sm"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> ${pctAtingida.toFixed(2)}%</span>`;
                     }
 
                     let corDesempenho = crescEfetivoMensal >= configuracoes.metaPerc ? 'text-emerald-600' : 'text-rose-600';
-                    stringDesempenhoEfetivo = `<span class="${corDesempenho} font-black text-[15px]">${crescEfetivoMensal.toFixed(2)}%</span>`;
+                    stringDesempenhoEfetivo = `<span class="${corDesempenho} font-black text-sm md:text-[15px]">${crescEfetivoMensal.toFixed(2)}%</span>`;
                     
                     coresBarChart.push(crescEfetivoMensal >= configuracoes.metaPerc ? '#10b981' : '#f43f5e');
 
                     if(ativos > 0) {
                         ultimaBaseAtiva = ativos;
-                        
                         if(ativosAnterior === 0) {
-                            stringCrescCli = `<span class="text-slate-400 font-medium text-[10px] uppercase">Ref. Inicial</span>`;
+                            stringCrescCli = `<span class="text-slate-400 font-medium text-[9px] md:text-[10px] uppercase">Ref. Inicial</span>`;
                         } else {
                             let crescClientes = ((ativos - ativosAnterior) / ativosAnterior) * 100;
                             let corCrescCli = crescClientes > 0 ? 'text-blue-600' : (crescClientes < 0 ? 'text-rose-600' : 'text-slate-500');
-                            stringCrescCli = `<span class="${corCrescCli} font-black text-[15px]">${crescClientes.toFixed(2)}%</span>`;
+                            stringCrescCli = `<span class="${corCrescCli} font-black text-sm md:text-[15px]">${crescClientes.toFixed(2)}%</span>`;
                         }
                         ativosAnterior = ativos;
                     }
@@ -594,26 +599,26 @@
                 }
 
                 htmlTabela += `
-                    <tr class="hover:bg-slate-50/80 transition-colors group border-b border-slate-100 last:border-0">
-                        <td class="p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors text-sm">${d.mes}</td>
-                        <td data-label="Valor Recebido" class="p-2 w-44">
-                            <div class="flex items-center gap-2 justify-end">
-                                <div class="flex-1 bg-white border ${recebido > 0 ? 'border-blue-200 bg-blue-50/20 text-blue-900' : 'border-slate-200 text-slate-400'} rounded-lg px-3 py-1.5 text-right font-black text-sm truncate cursor-default" title="Total: R$ ${formatBRL(recebido)}">
+                    <tr class="hover:bg-slate-50/80 transition-colors group">
+                        <td class="md:p-4 font-bold text-slate-600 group-hover:text-blue-700 transition-colors text-sm md:text-base">${d.mes}</td>
+                        <td data-label="Valor Recebido" class="md:p-2 w-full md:w-auto mobile-input-container">
+                            <div class="flex items-center gap-2 justify-end w-full md:w-auto">
+                                <div class="flex-1 md:flex-none md:w-32 bg-white border ${recebido > 0 ? 'border-blue-200 bg-blue-50/20 text-blue-900' : 'border-slate-200 text-slate-400'} rounded-lg px-3 py-2 md:py-1.5 text-right font-black text-sm truncate cursor-default">
                                     ${recebido > 0 ? formatBRL(recebido) : '0,00'}
                                 </div>
-                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-1.5 rounded-lg transition-all shadow-sm group-hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" title="Lançar valores por dia">
-                                    <i data-lucide="calendar-plus" class="w-4 h-4 hover:scale-110 transition-transform"></i>
+                                <button onclick="window.openDailyModal(${i})" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-blue-600 p-2 md:p-1.5 rounded-lg transition-all shadow-sm focus:outline-none shrink-0">
+                                    <i data-lucide="calendar-plus" class="w-4 h-4 md:w-4 md:h-4"></i>
                                 </button>
                             </div>
                         </td>
-                        <td data-label="Meta do Mês" class="p-2 text-right bg-slate-50/50">${stringMeta}</td>
-                        <td data-label="Desempenho" class="p-2 text-right">${stringDeficit}</td>
-                        <td data-label="Base Ativa" class="p-2 w-20"><input type="text" value="${ativos > 0 ? formatNum(ativos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'ativos', false)" class="input-field text-right text-slate-700 font-bold text-sm"></td>
-                        <td data-label="Novos" class="p-2 w-20"><input type="text" value="${novos > 0 ? formatNum(novos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'novos', false)" class="input-field text-right text-emerald-600 font-bold text-sm bg-emerald-50/30"></td>
-                        <td data-label="Canc." class="p-2 w-20"><input type="text" value="${canc > 0 ? formatNum(canc) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold text-sm bg-rose-50/30"></td>
-                        <td data-label="% Realizada" class="p-3 text-right bg-slate-50/30">${stringPct}</td>
-                        <td data-label="Cresc. Efetivo (Mês)" class="p-3 text-right">${stringDesempenhoEfetivo}</td>
-                        <td data-label="Cresc. Clientes" class="p-3 text-right bg-slate-50/30">${stringCrescCli}</td>
+                        <td data-label="Meta do Mês" class="md:p-2 text-right bg-transparent md:bg-slate-50/50">${stringMeta}</td>
+                        <td data-label="Desempenho" class="md:p-2 text-right">${stringDeficit}</td>
+                        <td data-label="Base Ativa" class="md:p-2 mobile-input-container"><input type="tel" value="${ativos > 0 ? formatNum(ativos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'ativos', false)" class="input-field text-right text-slate-700 font-bold text-sm"></td>
+                        <td data-label="Novos" class="md:p-2 mobile-input-container"><input type="tel" value="${novos > 0 ? formatNum(novos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'novos', false)" class="input-field text-right text-emerald-600 font-bold text-sm bg-emerald-50/30"></td>
+                        <td data-label="Canc." class="md:p-2 mobile-input-container"><input type="tel" value="${canc > 0 ? formatNum(canc) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold text-sm bg-rose-50/30"></td>
+                        <td data-label="% Realizada" class="md:p-3 text-right bg-transparent md:bg-slate-50/30">${stringPct}</td>
+                        <td data-label="Cresc. Efetivo" class="md:p-3 text-right">${stringDesempenhoEfetivo}</td>
+                        <td data-label="Cresc. Clientes" class="md:p-3 text-right bg-transparent md:bg-slate-50/30">${stringCrescCli}</td>
                     </tr>
                 `;
             });
@@ -628,9 +633,7 @@
             document.getElementById('kpi-canc-acum').innerText = somaCanc.toLocaleString('pt-BR');
             
             let percentualAno = 0;
-            if (metaTotalDoAno > 0) {
-                percentualAno = (totalFaturamento / metaTotalDoAno) * 100;
-            }
+            if (metaTotalDoAno > 0) percentualAno = (totalFaturamento / metaTotalDoAno) * 100;
             document.getElementById('kpi-progresso-text').innerText = percentualAno.toFixed(1) + "%";
             document.getElementById('kpi-progresso-bar').style.width = (percentualAno > 100 ? 100 : percentualAno) + "%";
 
@@ -640,16 +643,16 @@
             if(totalFaturamento > 0) {
                 if(saldoGlobalAno < 0) {
                     valKpiGlobal.innerText = "- R$ " + formatBRL(Math.abs(saldoGlobalAno));
-                    valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-rose-600 transition-colors duration-300";
+                    valKpiGlobal.className = "text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-rose-600 transition-colors duration-300 break-all";
                     subKpiGlobal.innerHTML = 'Déficit acumulado no ano. <span class="text-rose-500">Recuperação necessária.</span>';
                 } else {
                     valKpiGlobal.innerText = "+ R$ " + formatBRL(saldoGlobalAno);
-                    valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-emerald-600 transition-colors duration-300";
-                    subKpiGlobal.innerHTML = 'Superávit acumulado. <span class="text-emerald-600">Empresa no lucro anual!</span>';
+                    valKpiGlobal.className = "text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-emerald-600 transition-colors duration-300 break-all";
+                    subKpiGlobal.innerHTML = 'Superávit acumulado. <span class="text-emerald-600">Empresa no lucro!</span>';
                 }
             } else {
                 valKpiGlobal.innerText = "R$ 0,00";
-                valKpiGlobal.className = "text-4xl lg:text-5xl font-black tracking-tighter text-slate-300";
+                valKpiGlobal.className = "text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-slate-300";
                 subKpiGlobal.innerText = "Aguardando preenchimentos...";
             }
 
@@ -659,7 +662,6 @@
         function initCharts() {
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = "'Inter', sans-serif";
-
             const tooltipStyle = {
                 backgroundColor: 'rgba(255, 255, 255, 0.95)', titleColor: '#1e293b', bodyColor: '#475569',
                 borderColor: '#e2e8f0', borderWidth: 1, padding: 12, usePointStyle: true,
@@ -674,13 +676,13 @@
                     { label: 'Realizado (R$)', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', borderWidth: 3, fill: true, tension: 0.3 },
                     { label: 'Meta + Recuperação (R$)', data: [], borderColor: '#f43f5e', borderDash: [5, 5], pointRadius: 0, borderWidth: 2, tension: 0.3 }
                 ]}, 
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: tooltipStyle }, scales: basicScales, interaction: { mode: 'index', intersect: false } } 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: {size: 10} } }, tooltip: tooltipStyle }, scales: basicScales, interaction: { mode: 'index', intersect: false } } 
             });
 
             const ctxBar = document.getElementById('chartBar').getContext('2d');
             chartBar = new Chart(ctxBar, { 
                 type: 'bar', 
-                data: { labels: [], datasets: [{ label: 'Cresc. Efetivo Mensal (%)', data: [], backgroundColor: [], borderRadius: 6 }] }, 
+                data: { labels: [], datasets: [{ label: 'Cresc. Efetivo (%)', data: [], backgroundColor: [], borderRadius: 6 }] }, 
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...tooltipStyle, callbacks: { label: (ctx) => `Cresc. Mês: ${ctx.raw.toFixed(2)}%` } } }, scales: basicScales } 
             });
 
@@ -698,37 +700,20 @@
                     { label: 'Novos', data: [], backgroundColor: '#3b82f6', borderRadius: 4 },
                     { label: 'Cancelados', data: [], backgroundColor: '#f43f5e', borderRadius: 4 }
                 ]}, 
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: tooltipStyle }, scales: basicScales, interaction: { mode: 'index', intersect: false } } 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: {size: 10} } }, tooltip: tooltipStyle }, scales: basicScales, interaction: { mode: 'index', intersect: false } } 
             });
         }
 
         function updateCharts(labels, faturamento, metas, efetivo, cores, baseAtiva, novos, canc) {
             if (!chartLine) return;
-            
-            chartLine.data.labels = labels;
-            chartLine.data.datasets[0].data = faturamento;
-            chartLine.data.datasets[1].data = metas;
-            chartLine.update();
-            
-            chartBar.data.labels = labels;
-            chartBar.data.datasets[0].data = efetivo;
-            chartBar.data.datasets[0].backgroundColor = cores;
-            chartBar.update();
-
-            chartBase.data.labels = labels;
-            chartBase.data.datasets[0].data = baseAtiva;
-            chartBase.update();
-
-            chartClientes.data.labels = labels;
-            chartClientes.data.datasets[0].data = novos;
-            chartClientes.data.datasets[1].data = canc;
-            chartClientes.update();
+            chartLine.data.labels = labels; chartLine.data.datasets[0].data = faturamento; chartLine.data.datasets[1].data = metas; chartLine.update();
+            chartBar.data.labels = labels; chartBar.data.datasets[0].data = efetivo; chartBar.data.datasets[0].backgroundColor = cores; chartBar.update();
+            chartBase.data.labels = labels; chartBase.data.datasets[0].data = baseAtiva; chartBase.update();
+            chartClientes.data.labels = labels; chartClientes.data.datasets[0].data = novos; chartClientes.data.datasets[1].data = canc; chartClientes.update();
         }
 
         window.onload = () => { 
-            if (localStorage.getItem('igp_auth') === 'true') { 
-                initCharts(); loadData(); 
-            } 
+            if (localStorage.getItem('igp_auth') === 'true') { initCharts(); loadData(); } 
         };
     </script>
 </body>
