@@ -110,7 +110,7 @@
             <div class="flex flex-col items-center md:items-start w-full md:w-auto">
                 <img src="logo igp.png" alt="IGP FIBRA Logo" class="h-14 lg:h-20 object-contain mb-2 drop-shadow-sm" onerror="this.src='https://via.placeholder.com/150x50?text=IGP+FIBRA'">
                 <p class="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-widest text-center md:text-left">
-                    Dashboard Gerencial <span class="text-slate-300 mx-1 md:mx-2">|</span> Desenvolvido por Patrick Carmo
+                    Dashboard Gerencial <span class="text-slate-300 mx-1 md:mx-2">|</span> Por Patrick Carmo
                 </p>
             </div>
             
@@ -135,7 +135,7 @@
                 </div>
                 
                 <button onclick="window.toggleHelp(true)" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-sky-200 text-xs md:text-sm font-bold transition-all shadow-sm">
-                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Lógica
+                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Lógica e Regras
                 </button>
 
                 <button onclick="window.fazerLogout()" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-rose-200 text-xs md:text-sm font-bold transition-all shadow-sm">
@@ -254,7 +254,7 @@
             </div>
             <div class="glass-card p-4 md:p-6 rounded-xl md:rounded-2xl min-h-[300px] md:min-h-[350px] flex flex-col shadow-sm">
                 <h3 class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
-                    Crescimento Efetivo Mensal (%)
+                    Crescimento Efetivo (%)
                     <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-500"></i>
                 </h3>
                 <div class="relative flex-1 w-full"><canvas id="chartBar"></canvas></div>
@@ -277,38 +277,69 @@
     </div>
 
     <div id="help-modal" class="fixed inset-0 z-[70] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-4">
-        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="help-content">
-            <div class="p-4 md:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="help-content">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h2 class="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i data-lucide="help-circle" class="w-5 h-5 text-blue-600"></i> Como a Lógica Funciona
+                    <i data-lucide="book-open" class="w-5 h-5 text-blue-600"></i> Lógica e Regras do Sistema
                 </h2>
-                <button onclick="window.toggleHelp(false)" class="text-slate-400 hover:text-rose-500 transition-colors p-1.5 md:p-2 rounded-xl hover:bg-rose-50">
+                <button onclick="window.toggleHelp(false)" class="text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-5 md:p-6 overflow-y-auto flex-1 space-y-5 md:space-y-6 text-slate-600 text-xs md:text-sm">
-                <div class="space-y-2 md:space-y-3">
-                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="calendar" class="w-4 h-4 text-blue-500"></i> Fechamento Personalizado (26 a 25)
+            <div class="p-6 overflow-y-auto flex-1 space-y-6 text-slate-600 text-sm">
+                
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="settings-2" class="w-4 h-4 text-slate-500"></i> 1. Parâmetros e Metas Iniciais
                     </h3>
-                    <p class="leading-relaxed">O mês financeiro no painel não acompanha o calendário convencional. O mês de "Fevereiro", por exemplo, compreende do dia 26 de Janeiro até o dia 25 de Fevereiro.</p>
+                    <p class="leading-relaxed">O sistema funciona com base no <strong>Faturamento Base</strong> inicial e na <strong>Taxa Padrão Atual (%)</strong> que você estipular. Ao preencher esses dois campos, o dashboard cria matematicamente uma "escada" de metas crescentes mês a mês para o ano inteiro.</p>
                 </div>
-                <div class="space-y-2 md:space-y-3">
-                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Ajuste Semanal em 5 Fases
+
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-4 h-4 text-blue-500"></i> 2. Fechamento Financeiro (26 a 25)
                     </h3>
-                    <p class="leading-relaxed">Ao clicar em um mês, você verá o faturamento dividido em 5 fases precisas (26 a fim, 01 a 07, 08 a 14, 15 a 21 e 22 a 25). Se a Fase 1 não bater a meta estabelecida, a diferença é somada nas próximas fases em tempo real para mostrar exatamente como salvar o mês.</p>
+                    <p class="leading-relaxed">Os meses financeiros da IGP FIBRA não seguem o calendário civil tradicional de dia 01 a 30/31. O sistema entende que o mês de competência começa sempre no <strong>dia 26 do mês anterior</strong> e se encerra no <strong>dia 25 do mês atual</strong>. O botão de Lançamentos Diários gera os dias exatos baseados nessa regra.</p>
                 </div>
-                <div class="space-y-2 md:space-y-3">
-                    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                        <i data-lucide="rocket" class="w-4 h-4 text-orange-500"></i> Termômetro de Metas
+
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 text-rose-500"></i> 3. Lógica da Recuperação (Dívida de Caixa)
                     </h3>
-                    <p class="leading-relaxed">Dentro do modal de lançamentos, existe um termômetro que desafia a equipe em 5 níveis (Padrão 1.5%, Avançado 2.0%, Master 2.5%, Elite 3.0%, Diamante 3.5%). Cada meta de nível já soma a dívida financeira calculada especificamente para aquele degrau de exigência.</p>
+                    <p class="leading-relaxed">O sistema não ignora falhas do passado. Se em um mês a empresa faturar <em>abaixo</em> da meta, essa diferença gera uma <strong>Dívida (Déficit)</strong>. Essa dívida é automaticamente somada à meta padrão do próximo mês. Na tabela, você verá isso como a <strong>Meta Ajustada</strong>: a Meta Base somada ao que precisa ser Recuperado para voltar ao lucro.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i> 4. Crescimento Efetivo (Efeito Turbo)
+                    </h3>
+                    <p class="leading-relaxed">A coluna Cresc. Efetivo reflete exatamente a nota de esforço da equipe baseada na sua Taxa Padrão. Mas para ser coerente com a Gamificação, possui um "Acelerador": Se a meta for superada com folga, o sistema destrava o teto da Taxa Padrão e recompensa a equipe, alinhando a porcentagem visualmente com os Níveis de Excelência atingidos (Ex: O pulo para a Meta Diamante).</p>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="globe" class="w-4 h-4 text-indigo-500"></i> 5. Balanço Global e Saúde do Ano
+                    </h3>
+                    <p class="leading-relaxed">O cartão superior direito <strong>"Balanço Global do Ano"</strong> é o indicador de saúde máxima da empresa. Se ele estiver <span class="text-rose-600 font-bold">Vermelho</span>, significa que a soma de tudo que foi faturado até agora no ano está abaixo da soma das metas esperadas. Se estiver <span class="text-emerald-600 font-bold">Verde</span>, o ano está com superávit (sobra em caixa além do planejado).</p>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-orange-500"></i> 6. Microgerenciamento em 5 Fases
+                    </h3>
+                    <p class="leading-relaxed">Ao clicar no botão de "Lançar Dias" de um mês, o faturamento é dividido dinamicamente em 5 blocos (Dias 26 ao fim, 01 a 07, 08 a 14, 15 a 21 e 22 a 25). <strong>O Ajuste é Inteligente:</strong> Se a equipe for mal na Fase 1, o sistema recalcula as Fases 2, 3, 4 e 5, aumentando as metas diárias para mostrar exatamente o que precisa ser feito para salvar o mês.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i data-lucide="rocket" class="w-4 h-4 text-purple-500"></i> 7. Termômetro de Níveis (Gamificação)
+                    </h3>
+                    <p class="leading-relaxed">Também dentro do painel do mês, há um termômetro que desafia a equipe em 5 níveis de excelência: Padrão (1.5%), Avançado (2.0%), Master (2.5%), Elite (3.0%) e Diamante (3.5%). Cada "Card" de nível é inteligente: ele diz quanto você precisa faturar naquele mês já cobrando qualquer dívida acumulada na exigência daquele nível.</p>
                 </div>
             </div>
-            <div class="p-4 md:p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
-                <button onclick="window.toggleHelp(false)" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 md:py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
-                    Entendi
+            <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="window.toggleHelp(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
+                    Entendido
                 </button>
             </div>
         </div>
@@ -762,7 +793,17 @@
                     
                     saldoGlobalAno += saldoMes; 
 
+                    // --- A FÓRMULA DE OURO COM EFEITO TURBO ---
                     let crescEfetivoMensal = configuracoes.metaPerc * (pctAtingida / 100);
+
+                    // Se a equipe ultrapassou a meta (Passou de 100%), o acelerador liga
+                    if (pctAtingida > 100) {
+                        let excesso = pctAtingida - 100;
+                        // Exemplo: Em Fev o excesso é só 0.36%. Elevado ao quadrado vira nada, mantendo os 1.51%.
+                        // Em Março o excesso é enorme (10.58%). O quadrado faz o turbo explodir pra mais de 2%.
+                        crescEfetivoMensal += Math.pow(excesso, 2) * 0.02;
+                    }
+                    // ------------------------------------------
 
                     if (saldoMes < 0) {
                         stringDeficit = `<span class="text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded border border-rose-100 text-[10px] md:text-xs whitespace-nowrap">- R$ ${formatBRL(Math.abs(saldoMes))}</span>`;
@@ -799,7 +840,7 @@
                     labelsChart.push(d.mes.substring(0,3));
                     faturamentoChart.push(recebido);
                     metasChart.push(metaAjustada); 
-                    efetivoChart.push(crescEfetivoMensal);
+                    efetivoChart.push(crescEfetivoMensal); 
                     baseAtivaChart.push(ativos);
                     novosChart.push(novos);
                     cancChart.push(canc);
@@ -827,7 +868,7 @@
                         <td data-label="Novos" class="md:p-2 mobile-input-container"><input type="tel" value="${novos > 0 ? formatNum(novos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'novos', false)" class="input-field text-right text-emerald-600 font-bold text-sm bg-emerald-50/30"></td>
                         <td data-label="Canc." class="md:p-2 mobile-input-container"><input type="tel" value="${canc > 0 ? formatNum(canc) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold text-sm bg-rose-50/30"></td>
                         <td data-label="% Realizada" class="md:p-3 text-right bg-transparent md:bg-slate-50/30">${stringPct}</td>
-                        <td data-label="Cresc. Efetivo" class="md:p-3 text-right">${stringDesempenhoEfetivo}</td>
+                        <td data-label="Cresc. Efetivo" class="md:p-3 text-right text-emerald-600">${stringDesempenhoEfetivo}</td>
                         <td data-label="Cresc. Clientes" class="md:p-3 text-right bg-transparent md:bg-slate-50/30">${stringCrescCli}</td>
                     </tr>
                 `;
@@ -893,7 +934,7 @@
             chartBar = new Chart(ctxBar, { 
                 type: 'bar', 
                 data: { labels: [], datasets: [{ label: 'Cresc. Efetivo (%)', data: [], backgroundColor: [], borderRadius: 6 }] }, 
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...tooltipStyle, callbacks: { label: (ctx) => `Cresc. Mês: ${ctx.raw.toFixed(2)}%` } } }, scales: basicScales } 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...tooltipStyle, callbacks: { label: (ctx) => `Cresc. Efetivo: ${ctx.raw.toFixed(2)}%` } } }, scales: basicScales } 
             });
 
             const ctxBase = document.getElementById('chartBase').getContext('2d');
@@ -932,4 +973,3 @@
     </script>
 </body>
 </html>
-
