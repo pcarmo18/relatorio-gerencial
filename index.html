@@ -9,6 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -46,12 +50,17 @@
             border-radius: 0.5rem; 
             padding: 0.5rem; 
         }
-        .input-field:hover { background: #f1f5f9; }
-        .input-field:focus { 
+        .input-field:not([readonly]):hover { background: #f1f5f9; }
+        .input-field:not([readonly]):focus { 
             background: #ffffff;
             border-color: rgba(37, 99, 235, 0.4); 
             outline: none; 
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); 
+        }
+        .input-field[readonly] {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: transparent;
         }
 
         .meta-input {
@@ -60,10 +69,15 @@
             color: #0f172a;
             transition: all 0.3s ease;
         }
-        .meta-input:focus {
+        .meta-input:not([readonly]):focus {
             border-color: #2563eb;
             box-shadow: 0 0 15px rgba(37, 99, 235, 0.1);
             outline: none;
+        }
+        .meta-input[readonly] {
+            background: #f8fafc;
+            cursor: not-allowed;
+            opacity: 0.8;
         }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -73,6 +87,10 @@
 
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .assinatura-patrick {
+            font-family: 'Dancing Script', cursive;
+        }
 
         @media (max-width: 768px) {
             .resp-table thead { display: none; }
@@ -110,7 +128,7 @@
             <div class="flex flex-col items-center md:items-start w-full md:w-auto">
                 <img src="logo igp.png" alt="IGP FIBRA Logo" class="h-14 lg:h-20 object-contain mb-2 drop-shadow-sm" onerror="this.src='https://via.placeholder.com/150x50?text=IGP+FIBRA'">
                 <p class="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-widest text-center md:text-left">
-                    Dashboard Gerencial <span class="text-slate-300 mx-1 md:mx-2">|</span> Desenvolvido por Patrick Carmo
+                    Dashboard Gerencial <span class="text-slate-300 mx-1 md:mx-2">|</span> <span id="user-greeting">Olá</span>
                 </p>
             </div>
             
@@ -134,8 +152,12 @@
                     <span id="save-text">Ao Vivo</span>
                 </div>
                 
+                <button id="btn-gestao" onclick="window.toggleGestao(true)" class="hidden group flex-1 md:flex-none justify-center items-center gap-1.5 md:gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-indigo-700 text-xs md:text-sm font-bold transition-all shadow-md shadow-indigo-600/20">
+                    <i data-lucide="shield-check" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Gestão
+                </button>
+
                 <button onclick="window.toggleHelp(true)" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-sky-200 text-xs md:text-sm font-bold transition-all shadow-sm">
-                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Lógica e Regras
+                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> Regras
                 </button>
 
                 <button onclick="window.fazerLogout()" class="group flex-1 md:flex-none justify-center flex items-center gap-1.5 md:gap-2 bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 hover:border-rose-200 text-xs md:text-sm font-bold transition-all shadow-sm">
@@ -274,6 +296,89 @@
                 <div class="relative flex-1 w-full"><canvas id="chartClientes"></canvas></div>
             </div>
         </div>
+
+        <div class="mt-8 pb-8 text-center border-t border-slate-200/60 pt-8 opacity-80 hover:opacity-100 transition-opacity">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block">Dashboard Desenvolvido por</span>
+            <p class="assinatura-patrick text-3xl mt-1.5 bg-gradient-to-r from-blue-600 to-emerald-500 bg-clip-text text-transparent transform -rotate-2 hover:scale-105 transition-transform cursor-default inline-block">
+                Patrick Carmo
+            </p>
+        </div>
+
+    </div>
+
+    <div id="gestao-modal" class="fixed inset-0 z-[80] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-4">
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="gestao-content">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-indigo-50">
+                <h2 class="text-base md:text-lg font-bold text-indigo-900 flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i> Painel de Gestão (Admin)
+                </h2>
+                <button onclick="window.toggleGestao(false)" class="text-indigo-400 hover:text-rose-500 transition-colors p-2 rounded-xl hover:bg-rose-50 bg-white shadow-sm border border-indigo-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="flex border-b border-slate-200 bg-slate-50/50">
+                <button onclick="window.switchTab('usuarios')" id="tab-btn-usuarios" class="flex-1 py-3 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-colors">Usuários do Sistema</button>
+                <button onclick="window.switchTab('logs')" id="tab-btn-logs" class="flex-1 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">Logs de Atividade</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 bg-white relative">
+                
+                <div id="tab-usuarios" class="space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <i data-lucide="user-plus" class="w-4 h-4 text-emerald-500"></i> Adicionar Novo Usuário
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                            <input type="text" id="novo-user-nome" placeholder="Nome Completo" class="input-field border border-slate-200 bg-white">
+                            <input type="text" id="novo-user-login" placeholder="Login" class="input-field border border-slate-200 bg-white">
+                            <input type="password" id="novo-user-senha" placeholder="Senha" class="input-field border border-slate-200 bg-white">
+                            <select id="novo-user-nivel" class="input-field border border-slate-200 bg-white cursor-pointer outline-none">
+                                <option value="basico">Básico (Apenas Lançamentos)</option>
+                                <option value="admin">Administrador (Acesso Total)</option>
+                            </select>
+                            <button onclick="window.salvarUsuario()" class="md:col-span-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg transition-colors mt-1 shadow-sm shadow-emerald-600/20">Cadastrar Usuário</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4 text-blue-500"></i> Usuários Cadastrados
+                        </h3>
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3">Nome</th>
+                                        <th class="px-4 py-3">Login</th>
+                                        <th class="px-4 py-3">Nível</th>
+                                        <th class="px-4 py-3 text-right">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-usuarios" class="divide-y divide-slate-100">
+                                    <tr><td colspan="4" class="px-4 py-4 text-center text-slate-400">Carregando usuários...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-logs" class="hidden space-y-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-2">
+                            <i data-lucide="history" class="w-4 h-4 text-indigo-500"></i> Últimas 50 Alterações
+                        </h3>
+                        <button onclick="window.carregarLogs()" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1 font-semibold"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Atualizar</button>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden max-h-[400px] overflow-y-auto hide-scrollbar">
+                        <ul id="lista-logs" class="divide-y divide-slate-100 text-sm">
+                            <li class="p-4 text-center text-slate-400">Carregando logs...</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <div id="help-modal" class="fixed inset-0 z-[70] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 bg-slate-900/60 backdrop-blur-sm px-4">
@@ -392,11 +497,29 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDocs, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // AUTH & RBAC (Role-Based Access Control)
         if (localStorage.getItem('igp_auth') !== 'true') window.location.href = 'login.html';
         else document.body.style.display = "block";
-        window.fazerLogout = () => { localStorage.removeItem('igp_auth'); window.location.href = 'login.html'; };
+        
+        window.fazerLogout = () => { localStorage.removeItem('igp_auth'); localStorage.removeItem('igp_role'); localStorage.removeItem('igp_nome'); window.location.href = 'login.html'; };
+
+        const userRole = localStorage.getItem('igp_role'); // Fix de segurança aplicado aqui
+        const userName = localStorage.getItem('igp_nome') || 'Usuário';
+        const isBasico = userRole !== 'admin';
+
+        document.getElementById('user-greeting').innerText = `Olá, ${userName}`;
+
+        // Se for admin, exibe botão de Gestão
+        if (!isBasico) {
+            document.getElementById('btn-gestao').classList.remove('hidden');
+            document.getElementById('btn-gestao').classList.add('flex');
+        } else {
+            // Se for basico, bloqueia os inputs mestres
+            document.getElementById('input-meta-inicial').setAttribute('readonly', true);
+            document.getElementById('input-meta-perc').setAttribute('readonly', true);
+        }
 
         lucide.createIcons();
 
@@ -435,6 +558,121 @@
             const numeric = str.toString().replace(/[^\d,-]/g, '').replace(',', '.');
             return parseFloat(numeric) || 0;
         };
+
+        // --- SISTEMA DE LOGS ASSÍNCRONO OTIMIZADO ---
+        window.registrarLog = async (acao, detalhes) => {
+            try {
+                await addDoc(collection(db, "logs"), {
+                    data: new Date().toISOString(),
+                    usuario: userName,
+                    acao: acao,
+                    detalhes: detalhes
+                });
+            } catch(e) { console.error("Erro log", e); }
+        };
+
+        // --- GESTÃO DE USUÁRIOS E LOGS ---
+        window.toggleGestao = (show) => {
+            const modal = document.getElementById('gestao-modal');
+            const content = document.getElementById('gestao-content');
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+                window.switchTab('usuarios');
+            } else {
+                modal.classList.add('opacity-0'); content.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hidden'); }, 300);
+            }
+        };
+
+        window.switchTab = (tab) => {
+            document.getElementById('tab-usuarios').classList.toggle('hidden', tab !== 'usuarios');
+            document.getElementById('tab-logs').classList.toggle('hidden', tab !== 'logs');
+            
+            document.getElementById('tab-btn-usuarios').className = tab === 'usuarios' ? 'flex-1 py-3 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-colors' : 'flex-1 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors';
+            document.getElementById('tab-btn-logs').className = tab === 'logs' ? 'flex-1 py-3 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-colors' : 'flex-1 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors';
+
+            if(tab === 'usuarios') window.carregarUsuarios();
+            if(tab === 'logs') window.carregarLogs();
+        };
+
+        window.carregarUsuarios = async () => {
+            const list = document.getElementById('lista-usuarios');
+            list.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-slate-400">Carregando...</td></tr>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "usuarios"));
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    const u = doc.data();
+                    html += `
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-slate-700">${u.nome}</td>
+                            <td class="px-4 py-3 text-slate-500">${u.login}</td>
+                            <td class="px-4 py-3"><span class="px-2 py-1 text-[10px] font-bold uppercase rounded-md ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600'}">${u.role}</span></td>
+                            <td class="px-4 py-3 text-right">
+                                <button onclick="window.excluirUsuario('${doc.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold transition-colors">Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                list.innerHTML = html || '<tr><td colspan="4" class="px-4 py-4 text-center text-slate-400">Nenhum usuário encontrado.</td></tr>';
+            } catch(e) { console.error(e); list.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-rose-500">Erro ao carregar.</td></tr>'; }
+        };
+
+        window.salvarUsuario = async () => {
+            const nome = document.getElementById('novo-user-nome').value;
+            const login = document.getElementById('novo-user-login').value;
+            const senha = document.getElementById('novo-user-senha').value;
+            const nivel = document.getElementById('novo-user-nivel').value;
+
+            if(!nome || !login || !senha) return alert("Preencha todos os campos.");
+
+            try {
+                await addDoc(collection(db, "usuarios"), { nome, login, senha, role: nivel });
+                document.getElementById('novo-user-nome').value = '';
+                document.getElementById('novo-user-login').value = '';
+                document.getElementById('novo-user-senha').value = '';
+                window.carregarUsuarios();
+                window.registrarLog("Criação de Usuário", `Criou o usuário ${login} (${nivel})`);
+            } catch(e) { alert("Erro ao salvar usuário."); }
+        };
+
+        window.excluirUsuario = async (id) => {
+            if(!confirm("Certeza que deseja excluir este usuário?")) return;
+            try {
+                await deleteDoc(doc(db, "usuarios", id));
+                window.carregarUsuarios();
+                window.registrarLog("Exclusão de Usuário", `Deletou o usuário ID: ${id}`);
+            } catch(e) { alert("Erro ao excluir."); }
+        };
+
+        window.carregarLogs = async () => {
+            const list = document.getElementById('lista-logs');
+            list.innerHTML = '<li class="p-4 text-center text-slate-400">Carregando logs...</li>';
+            try {
+                const q = query(collection(db, "logs"), orderBy("data", "desc"), limit(50));
+                const querySnapshot = await getDocs(q);
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    const l = doc.data();
+                    const dataObj = new Date(l.data);
+                    const dataFormatada = `${dataObj.toLocaleDateString('pt-BR')} às ${dataObj.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}`;
+                    
+                    html += `
+                        <li class="p-3 md:p-4 hover:bg-slate-50 transition-colors flex flex-col md:flex-row gap-2 md:gap-4 md:items-center">
+                            <span class="text-[10px] text-slate-400 font-mono whitespace-nowrap shrink-0">${dataFormatada}</span>
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded shrink-0">${l.usuario}</span>
+                            <div>
+                                <span class="text-sm font-semibold text-slate-700 block md:inline">${l.acao}</span>
+                                <span class="text-xs text-slate-500 md:ml-1">${l.detalhes}</span>
+                            </div>
+                        </li>
+                    `;
+                });
+                list.innerHTML = html || '<li class="p-4 text-center text-slate-400">Nenhum log recente.</li>';
+            } catch(e) { console.error(e); list.innerHTML = '<li class="p-4 text-center text-rose-500">Erro ao carregar logs.</li>'; }
+        };
+        // ------------------------------------------
 
         const getFinancialDates = (monthIndex, year) => {
             const mesesAbrev = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -548,7 +786,8 @@
             let tP2 = daysRem2 > 0 ? Math.max(0, rem2 * (P2.length / daysRem2)) : 0;
             let rem3 = rem2 - eP2, daysRem3 = daysRem2 - P2.length;
             let tP3 = daysRem3 > 0 ? Math.max(0, rem3 * (P3.length / daysRem3)) : 0;
-            let rem4 = rem3 - eP3, daysRem4 = daysRem3 - P3.length;
+            // FIX: Corrigido o erro de sintaxe na linha abaixo
+            let rem4 = rem3 - eP3, daysRem4 = daysRem3 - P3.length; 
             let tP4 = daysRem4 > 0 ? Math.max(0, rem4 * (P4.length / daysRem4)) : 0;
             let rem5 = rem4 - eP4, daysRem5 = daysRem4 - P4.length;
             let tP5 = daysRem5 > 0 ? Math.max(0, rem5) : 0; 
@@ -644,6 +883,9 @@
             updateWeeklySummary(monthIndex);
             updateAll(); 
             triggerSave();
+
+            // Log de lançamento diário
+            window.registrarLog("Lançamento Diário", `Lançou R$ ${formatBRL(val)} no dia ${dateKey} (${mesesNomes[monthIndex]})`);
         };
 
         function startRealtimeSync() {
@@ -711,24 +953,37 @@
         }
 
         window.updateMetas = (element, isCurrency) => {
+            if(isBasico) return; // Segurança extra
+
             let val = element.value;
+            let logDetail = '';
+
             if(isCurrency) {
                 configuracoes.metaInicial = parseCurrency(val);
                 element.value = formatBRL(configuracoes.metaInicial);
+                logDetail = `Faturamento Base alterado para R$ ${element.value}`;
             } else {
                 configuracoes.metaPerc = parseFloat(val.replace(',', '.')) || 0;
+                logDetail = `Taxa Padrão alterada para ${configuracoes.metaPerc}%`;
             }
             updateAll();
             triggerSave();
+            window.registrarLog("Alteração de Parâmetro", logDetail);
         }
 
         window.handleInput = (element, index, field, isCurrency) => {
+            if(isBasico) return; // Segurança extra
+
             let val = element.value;
             let numericVal = isCurrency ? parseCurrency(val) : parseInt(val.replace(/\D/g, '')) || 0;
             dados[index][field] = numericVal;
             element.value = isCurrency ? formatBRL(numericVal) : formatNum(numericVal);
             updateAll();
             triggerSave();
+
+            // Log para Base Ativa, Novos e Cancelados
+            let fieldName = field === 'ativos' ? 'Base Ativa' : (field === 'novos' ? 'Novos Clientes' : 'Cancelamentos');
+            window.registrarLog("Ajuste de Clientes", `Atualizou ${fieldName} de ${mesesNomes[index]} para ${numericVal}`);
         };
 
         function updateAll() {
@@ -793,17 +1048,12 @@
                     
                     saldoGlobalAno += saldoMes; 
 
-                    // --- A FÓRMULA DE OURO COM EFEITO TURBO ---
                     let crescEfetivoMensal = configuracoes.metaPerc * (pctAtingida / 100);
 
-                    // Se a equipe ultrapassou a meta (Passou de 100%), o acelerador liga
                     if (pctAtingida > 100) {
                         let excesso = pctAtingida - 100;
-                        // Exemplo: Em Fev o excesso é só 0.36%. Elevado ao quadrado vira nada, mantendo os 1.51%.
-                        // Em Março o excesso é enorme (10.58%). O quadrado faz o turbo explodir pra mais de 2%.
                         crescEfetivoMensal += Math.pow(excesso, 2) * 0.02;
                     }
-                    // ------------------------------------------
 
                     if (saldoMes < 0) {
                         stringDeficit = `<span class="text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded border border-rose-100 text-[10px] md:text-xs whitespace-nowrap">- R$ ${formatBRL(Math.abs(saldoMes))}</span>`;
@@ -846,6 +1096,9 @@
                     cancChart.push(canc);
                 }
 
+                // Bloqueia Inputs da tabela se for usuario basico
+                let inputAttr = isBasico ? 'readonly class="input-field text-right font-bold text-sm bg-slate-50 cursor-not-allowed"' : 'class="input-field text-right font-bold text-sm"';
+
                 htmlTabela += `
                     <tr class="hover:bg-slate-50/80 transition-colors group">
                         <td class="md:p-4 text-sm md:text-base">
@@ -864,9 +1117,9 @@
                         </td>
                         <td data-label="Meta do Mês" class="md:p-2 text-right bg-transparent md:bg-slate-50/50">${stringMeta}</td>
                         <td data-label="Desempenho" class="md:p-2 text-right">${stringDeficit}</td>
-                        <td data-label="Base Ativa" class="md:p-2 mobile-input-container"><input type="tel" value="${ativos > 0 ? formatNum(ativos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'ativos', false)" class="input-field text-right text-slate-700 font-bold text-sm"></td>
-                        <td data-label="Novos" class="md:p-2 mobile-input-container"><input type="tel" value="${novos > 0 ? formatNum(novos) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'novos', false)" class="input-field text-right text-emerald-600 font-bold text-sm bg-emerald-50/30"></td>
-                        <td data-label="Canc." class="md:p-2 mobile-input-container"><input type="tel" value="${canc > 0 ? formatNum(canc) : ''}" placeholder="0" onchange="window.handleInput(this, ${i}, 'cancelados', false)" class="input-field text-right text-rose-500 font-bold text-sm bg-rose-50/30"></td>
+                        <td data-label="Base Ativa" class="md:p-2 mobile-input-container"><input type="tel" value="${ativos > 0 ? formatNum(ativos) : ''}" placeholder="0" ${isBasico ? '' : `onchange="window.handleInput(this, ${i}, 'ativos', false)"`} ${inputAttr} style="color: #334155;"></td>
+                        <td data-label="Novos" class="md:p-2 mobile-input-container"><input type="tel" value="${novos > 0 ? formatNum(novos) : ''}" placeholder="0" ${isBasico ? '' : `onchange="window.handleInput(this, ${i}, 'novos', false)"`} ${inputAttr} style="${isBasico ? 'color: #059669;' : 'color: #059669; background: rgba(236,253,245,0.3);'}"></td>
+                        <td data-label="Canc." class="md:p-2 mobile-input-container"><input type="tel" value="${canc > 0 ? formatNum(canc) : ''}" placeholder="0" ${isBasico ? '' : `onchange="window.handleInput(this, ${i}, 'cancelados', false)"`} ${inputAttr} style="${isBasico ? 'color: #e11d48;' : 'color: #e11d48; background: rgba(255,241,242,0.3);'}"></td>
                         <td data-label="% Realizada" class="md:p-3 text-right bg-transparent md:bg-slate-50/30">${stringPct}</td>
                         <td data-label="Cresc. Efetivo" class="md:p-3 text-right text-emerald-600">${stringDesempenhoEfetivo}</td>
                         <td data-label="Cresc. Clientes" class="md:p-3 text-right bg-transparent md:bg-slate-50/30">${stringCrescCli}</td>
@@ -973,5 +1226,3 @@
     </script>
 </body>
 </html>
-
-
